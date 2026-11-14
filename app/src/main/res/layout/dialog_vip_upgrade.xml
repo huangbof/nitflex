@@ -3,130 +3,387 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp"
+    android:layout_margin="16dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="12dp"
+    app:cardElevation="16dp"
     app:cardBackgroundColor="@color/bg_card_elevated">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-        <!-- Close button top-right -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/btnVipClose"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="end"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="@color/text_gray"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="Đóng" />
-        </FrameLayout>
-
-        <!-- Crown Icon -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="👑"
-            android:textSize="48sp" />
-
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NIT FLEX VIP PASS"
-            android:textColor="@color/accent_gold"
-            android:textSize="22sp"
-            android:letterSpacing="0.05"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mở khóa toàn bộ phim điểm cao > 7.0 TMDB"
-            android:textColor="@color/text_white"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp" />
-
-        <!-- Movie notice if triggered from a VIP movie -->
-        <TextView
-            android:id="@+id/tvVipMovieNotice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_genre_chip"
-            android:padding="12dp"
-            android:layout_marginTop="16dp"
-            android:text="🎬 Phim này đạt điểm cao và chỉ dành riêng cho thành viên VIP."
-            android:textColor="@color/text_gray_light"
-            android:textSize="12sp"
-            android:lineSpacingExtra="3dp" />
-
-        <!-- VIP Benefits -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="16dp">
+            android:padding="20dp">
 
+            <!-- Top Close button & Crown Header -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="👑"
+                        android:textSize="26sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NIT FLEX VIP PASS"
+                        android:textColor="@color/accent_gold"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnVipClose"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    app:tint="@color/text_gray"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Đóng" />
+            </FrameLayout>
+
+            <!-- Movie Notice if opened from VIP movie -->
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tvVipMovieNotice"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="✓ Xem phim bom tấn điểm số > 7.0 không giới hạn"
+                android:background="@drawable/bg_genre_chip"
+                android:padding="10dp"
+                android:layout_marginTop="12dp"
+                android:text="🎬 Phim này đạt điểm cao và chỉ dành riêng cho thành viên VIP."
                 android:textColor="@color/text_gray_light"
                 android:textSize="12sp"
-                android:layout_marginBottom="6dp" />
+                android:lineSpacingExtra="2dp" />
+
+            <!-- Benefits -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_vip_package_normal"
+                android:padding="12dp"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨ ĐẶC QUYỀN THÀNH VIÊN HOÀNG GIA"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="• Mở khóa 100% phim bom tấn điểm số > 8.0 TMDB"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="• Xem phim chất lượng 4K Ultra HD mượt mà, không quảng cáo"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="• Huy hiệu VIP độc quyền trên toàn hệ thống Nit Flex"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="✓ Chất lượng 4K Ultra HD &amp; mượt mà không quảng cáo"
-                android:textColor="@color/text_gray_light"
-                android:textSize="12sp"
-                android:layout_marginBottom="6dp" />
+                android:text="CHỌN GÓI DỊCH VỤ"
+                android:textColor="@color/text_gray"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
 
+            <!-- Package 1: VIP 1 Month -->
+            <LinearLayout
+                android:id="@+id/cardPkg1Month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_vip_package_selected"
+                android:padding="14dp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <RadioButton
+                    android:id="@+id/rbPkg1Month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:buttonTint="@color/accent_gold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:id="@+id/tvPkg1Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VIP 1 Tháng"
+                        android:textColor="@color/text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Trải nghiệm trọn vẹn 30 ngày"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPkg1Price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="59.000 đ"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Package 2: VIP 6 Months (SAVE 15%) -->
+            <LinearLayout
+                android:id="@+id/cardPkg6Month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_vip_package_normal"
+                android:padding="14dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <RadioButton
+                    android:id="@+id/rbPkg6Month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:clickable="false"
+                    android:buttonTint="@color/accent_gold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvPkg2Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="VIP 6 Tháng"
+                            android:textColor="@color/text_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TIẾT KIỆM 15%"
+                            android:background="@drawable/bg_vip_badge"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="6dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tận hưởng xem phim 180 ngày"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPkg2Price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="299.000 đ"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Package 3: VIP 1 Year (ROYAL BEST VALUE) -->
+            <LinearLayout
+                android:id="@+id/cardPkg1Year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_vip_package_normal"
+                android:padding="14dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <RadioButton
+                    android:id="@+id/rbPkg1Year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:clickable="false"
+                    android:buttonTint="@color/accent_gold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvPkg3Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="VIP 1 Năm Hoàng Gia"
+                            android:textColor="@color/text_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="HOT -30%"
+                            android:background="@color/primary_red"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="6dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đặc quyền tối thượng 365 ngày"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPkg3Price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="499.000 đ"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Payment Method Selector -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="✓ Huy hiệu VIP Hoàng Gia hiển thị trong cộng đồng"
-                android:textColor="@color/accent_gold"
-                android:textSize="12sp" />
+                android:text="PHƯƠNG THỨC THANH TOÁN"
+                android:textColor="@color/text_gray"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rgPaymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbPayVietQR"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🏦 VietQR (Napas)"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:checked="true"
+                    android:buttonTint="@color/accent_gold" />
+
+                <RadioButton
+                    android:id="@+id/rbPayMoMo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📱 Ví MoMo"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:buttonTint="@color/accent_gold" />
+            </RadioGroup>
+
+            <!-- Proceed Button -->
+            <Button
+                android:id="@+id/btnProceedPayment"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:text="👑 TIẾP TỤC THANH TOÁN • 59.000đ"
+                android:backgroundTint="@color/accent_gold"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
         </LinearLayout>
-
-        <!-- Package 1: Monthly -->
-        <Button
-            android:id="@+id/btnUpgradeMonthly"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="20dp"
-            android:text="👑 KÍCH HOẠT VIP 1 THÁNG • 59.000đ"
-            android:backgroundTint="@color/accent_gold"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="13sp" />
-
-        <!-- Package 2: Yearly -->
-        <Button
-            android:id="@+id/btnUpgradeYearly"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="10dp"
-            android:text="⭐ GÓI 1 NĂM (TIẾT KIỆM 40%) • 499.000đ"
-            android:backgroundTint="@color/bg_card"
-            android:textColor="@color/text_white"
-            android:textSize="12sp" />
-
-    </LinearLayout>
-
+    </ScrollView>
 </androidx.cardview.widget.CardView>
