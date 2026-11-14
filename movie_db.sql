@@ -36,7 +36,11 @@ CREATE TABLE IF NOT EXISTS movies (
     view_count INT DEFAULT 0,
     genre_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (genre_id) REFERENCES genres(id)
+    FOREIGN KEY (genre_id) REFERENCES genres(id),
+    INDEX idx_movies_title (title),
+    INDEX idx_movies_vote (vote_average),
+    INDEX idx_movies_pop (popularity),
+    INDEX idx_movies_genre (genre_id)
 );
 
 -- =============================================
@@ -76,7 +80,8 @@ CREATE TABLE IF NOT EXISTS comments (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
+    INDEX idx_comments_movie (movie_id)
 );
 
 -- =============================================
@@ -149,7 +154,7 @@ INSERT INTO movies (tmdb_id, title, original_title, overview, poster_path, backd
  'raw/endgame.mp4'),
 
 (19995, 'Avatar', 'Avatar',
- 'Ở thế kỷ 22, Jake Sully - một cựu lính thủy đánh bộ bị liệt hai chân - được đưa đến hành tinh Pandora trong một nhiệm vụ đặc biệt. Tại đây, anh bị giằng xé giữa mệnh lệnh của quân đội loài người và tình yêu dành cho bộ tộc Na\''vi cùng vùng đất hoang sơ tuyệt đẹp.',
+ 'Ở thế kỷ 22, Jake Sully - một cựu lính thủy đánh bộ bị liệt hai chân - được đưa đến hành tinh Pandora trong một nhiệm vụ đặc biệt. Tại đây, anh bị giằng xé giữa mệnh lệnh của quân đội loài người và tình yêu dành cho bộ tộc Na''vi cùng vùng đất hoang sơ tuyệt đẹp.',
  'https://image.tmdb.org/t/p/w500/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg',
  'https://image.tmdb.org/t/p/original/o0s4XsEDfDlvit5pDRKjzXR4pp2.jpg',
  '2009-12-10', 7.6, 29000, 185.4, 'en', 878,
@@ -170,14 +175,14 @@ INSERT INTO movies (tmdb_id, title, original_title, overview, poster_path, backd
  'raw/interstellar.mp4'),
 
 (550, 'Sàn Đấu Sinh Tử', 'Fight Club',
- 'Một nhân viên văn phòng mất ngủ kinh niên tình cờ gặp Tyler Durden - tay buôn xà phòng bí ẩn đầy nổi loạn. Họ cùng nhau sáng lập \''Sàn đấu sinh tử\'' ngầm nhằm giải tỏa bạo lực bản năng, nhanh chóng biến nó thành một phong trào ngầm gây chấn động toàn xã hội.',
+ 'Một nhân viên văn phòng mất ngủ kinh niên tình cờ gặp Tyler Durden - tay buôn xà phòng bí ẩn đầy nổi loạn. Họ cùng nhau sáng lập "Sàn đấu sinh tử" ngầm nhằm giải tỏa bạo lực bản năng, nhanh chóng biến nó thành một phong trào ngầm gây chấn động toàn xã hội.',
  'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg',
  'https://image.tmdb.org/t/p/original/fCayJrkfRaCRCTh8GqN30f8oyQF.jpg',
  '1999-10-15', 8.4, 28000, 73.1, 'en', 18,
  'raw/fight_club.mp4'),
 
 (238, 'Bố Già', 'The Godfather',
- 'Tác phẩm kinh điển xoay quanh gia tộc mafia lừng lẫy Corleone giai đoạn 1945-1955. Khi \''Bố già\'' Vito Corleone may mắn sống sót sau một vụ ám sát, người con trai út Michael Corleone - vốn đứng ngoài vòng tội ác - buộc phải bước vào cuộc chiến quyền lực đẫm máu.',
+ 'Tác phẩm kinh điển xoay quanh gia tộc mafia lừng lẫy Corleone giai đoạn 1945-1955. Khi "Bố già" Vito Corleone may mắn sống sót sau một vụ ám sát, người con trai út Michael Corleone - vốn đứng ngoài vòng tội ác - buộc phải bước vào cuộc chiến quyền lực đẫm máu.',
  'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
  'https://image.tmdb.org/t/p/original/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
  '1972-03-14', 8.7, 19000, 109.5, 'en', 80,
@@ -261,7 +266,7 @@ INSERT INTO movies (tmdb_id, title, original_title, overview, poster_path, backd
  'raw/city_of_god.mp4'),
 
 (361743, 'Phi Công Siêu Đẳng: Maverick', 'Top Gun: Maverick',
- 'Sau hơn 30 năm cống hiến với tư cách phi công chiến đấu cự phách của Hải quân Mỹ, Pete \''Maverick\'' Mitchell trở lại để huấn luyện một đội phi công trẻ ưu tú cho một nhiệm vụ sinh tử vô cùng hiểm hóc, nơi anh phải đối mặt với bóng ma quá khứ và thử thách sinh tồn cam go nhất.',
+ 'Sau hơn 30 năm cống hiến với tư cách phi công chiến đấu cự phách của Hải quân Mỹ, Pete "Maverick" Mitchell trở lại để huấn luyện một đội phi công trẻ ưu tú cho một nhiệm vụ sinh tử vô cùng hiểm hóc, nơi anh phải đối mặt với bóng ma quá khứ và thử thách sinh tồn cam go nhất.',
  'https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg',
  'https://image.tmdb.org/t/p/original/odJ4hx6g6vBt4lBWKFD1tI8WS4x.jpg',
  '2022-05-24', 8.3, 16000, 299.4, 'en', 28,
@@ -295,7 +300,8 @@ CREATE TABLE IF NOT EXISTS movie_casts (
     actor_name VARCHAR(100) NOT NULL,
     character_name VARCHAR(100),
     profile_path VARCHAR(500),
-    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
+    INDEX idx_casts_movie (movie_id)
 );
 
 -- 1. Avengers: Cuộc Chiến Vô Cực (tmdb_id = 299536)
@@ -314,7 +320,7 @@ SELECT id, 'Benedict Cumberbatch', 'Dr. Stephen Strange', 'https://image.tmdb.or
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
 SELECT id, 'Tom Holland', 'Peter Parker / Spider-Man', 'https://image.tmdb.org/t/p/w200/bBRqqoK1v3g9wS9MwhB4iA1yS4r.jpg' FROM movies WHERE tmdb_id = 299536;
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
-SELECT id, 'Chadwick Boseman', 'T\'Challa / Black Panther', 'https://image.tmdb.org/t/p/w200/nL1OMkssg2q57656A92z0jX1N8m.jpg' FROM movies WHERE tmdb_id = 299536;
+SELECT id, 'Chadwick Boseman', 'T''Challa / Black Panther', 'https://image.tmdb.org/t/p/w200/nL1OMkssg2q57656A92z0jX1N8m.jpg' FROM movies WHERE tmdb_id = 299536;
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
 SELECT id, 'Josh Brolin', 'Thanos', 'https://image.tmdb.org/t/p/w200/sX2etBbIkxRaCsATyw5ZpOVMPTD.jpg' FROM movies WHERE tmdb_id = 299536;
 
@@ -406,7 +412,7 @@ SELECT id, 'Robert Duvall', 'Tom Hagen', 'https://image.tmdb.org/t/p/w200/z0x9c8
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
 SELECT id, 'Diane Keaton', 'Kay Adams Corleone', 'https://image.tmdb.org/t/p/w200/q9w8e7r6t5y4u3i2o1p0a9s8d7f.jpg' FROM movies WHERE tmdb_id = 240;
 
--- 9. Bản Danh Sách Của Schindler (Schindler\'s List - tmdb_id = 424)
+-- 9. Bản Danh Sách Của Schindler (Schindler List - tmdb_id = 424)
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
 SELECT id, 'Liam Neeson', 'Oskar Schindler', 'https://image.tmdb.org/t/p/w200/wPWsq78M4G9W9vW1xK8k8vW9y0m.jpg' FROM movies WHERE tmdb_id = 424;
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
@@ -508,7 +514,7 @@ SELECT id, 'David Morse', 'Brutus "Brutal" Howell', 'https://image.tmdb.org/t/p/
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
 SELECT id, 'Alexandre Rodrigues', 'Buscapé / Rocket', 'https://image.tmdb.org/t/p/w200/yA7w8e9r0t1y2u3i4o5p6a7s8d9.jpg' FROM movies WHERE tmdb_id = 598;
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
-SELECT id, 'Leandro Firmino', 'Zé Pequeno / Li\'l Zé', 'https://image.tmdb.org/t/p/w200/bKxL8w1y0l2m3n4o5p6q7r8s9t0.jpg' FROM movies WHERE tmdb_id = 598;
+SELECT id, 'Leandro Firmino', 'Zé Pequeno / Li''l Zé', 'https://image.tmdb.org/t/p/w200/bKxL8w1y0l2m3n4o5p6q7r8s9t0.jpg' FROM movies WHERE tmdb_id = 598;
 INSERT INTO movie_casts (movie_id, actor_name, character_name, profile_path) 
 SELECT id, 'Phellipe Haagensen', 'Bené', 'https://image.tmdb.org/t/p/w200/z0x9c8v7b6n5m4a3s2d1f0g9h8j.jpg' FROM movies WHERE tmdb_id = 598;
 
@@ -544,15 +550,7 @@ ON DUPLICATE KEY UPDATE rating = VALUES(rating);
 UPDATE users SET is_vip = 1 WHERE id = 1;
 
 
--- =============================================
--- TỐI ƯU HÓA HIỆU NĂNG (INDEXES CHO TÌM KIẾM & LỌC NHANH)
--- =============================================
-ALTER TABLE movies ADD INDEX IF NOT EXISTS idx_movies_title (title);
-ALTER TABLE movies ADD INDEX IF NOT EXISTS idx_movies_vote (vote_average);
-ALTER TABLE movies ADD INDEX IF NOT EXISTS idx_movies_pop (popularity);
-ALTER TABLE movies ADD INDEX IF NOT EXISTS idx_movies_genre (genre_id);
-ALTER TABLE comments ADD INDEX IF NOT EXISTS idx_comments_movie (movie_id);
-ALTER TABLE movie_casts ADD INDEX IF NOT EXISTS idx_casts_movie (movie_id);
+-- (Chỉ mục Index đã được tạo trực tiếp trong định nghĩa bảng ở trên để tương thích 100% mọi phiên bản MySQL/MariaDB)
 
 
 -- =============================================
