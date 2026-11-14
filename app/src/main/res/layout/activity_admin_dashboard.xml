@@ -134,8 +134,19 @@
                 android:id="@+id/tabBtnVip"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
+                android:layout_marginEnd="6dp"
                 android:backgroundTint="@color/bg_card"
                 android:text="👑 Gói VIP"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp" />
+
+            <Button
+                android:id="@+id/tabBtnComments"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:backgroundTint="@color/bg_card"
+                android:text="💬 Bình Luận"
                 android:textColor="@color/text_gray_light"
                 android:textSize="12sp"
                 android:paddingHorizontal="14dp" />
@@ -502,6 +513,21 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <!-- Search Movies Bar -->
+            <EditText
+                android:id="@+id/etSearchAdminMovies"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginHorizontal="14dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_genre_chip"
+                android:hint="🔍 Tìm nhanh phim trong kho..."
+                android:textColorHint="@color/text_gray_dark"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp"
+                android:inputType="text" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAdminMovies"
                 android:layout_width="match_parent"
@@ -545,6 +571,21 @@
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <!-- Search Users Bar -->
+            <EditText
+                android:id="@+id/etSearchAdminUsers"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginHorizontal="14dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_genre_chip"
+                android:hint="🔍 Tìm người dùng theo tên, email..."
+                android:textColorHint="@color/text_gray_dark"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp"
+                android:inputType="text" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAdminUsers"
@@ -663,6 +704,77 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAdminVipPackages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="24dp" />
+        </LinearLayout>
+
+        <!-- 5. TAB BÌNH LUẬN & ĐÁNH GIÁ (COMMENTS MODERATION) -->
+        <LinearLayout
+            android:id="@+id/viewTabComments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvAdminCommentsCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Quản lý bình luận (0)"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnRefreshComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="🔄 Tải lại"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_white"
+                    android:backgroundTint="@color/bg_card"
+                    android:paddingHorizontal="12dp" />
+            </LinearLayout>
+
+            <!-- Search Comments Bar -->
+            <EditText
+                android:id="@+id/etSearchAdminComments"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginHorizontal="14dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_genre_chip"
+                android:hint="🔍 Tìm theo người dùng, tên phim hoặc nội dung..."
+                android:textColorHint="@color/text_gray_dark"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tvEmptyAdminComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="32dp"
+                android:text="Chưa có bình luận nào trên hệ thống"
+                android:textColor="@color/text_gray"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAdminComments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"

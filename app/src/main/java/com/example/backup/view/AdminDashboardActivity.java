@@ -31,12 +31,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.backup.R;
 import com.example.backup.adapter.AdminCastAdapter;
+import com.example.backup.adapter.AdminCommentAdapter;
 import com.example.backup.adapter.AdminMovieAdapter;
 import com.example.backup.adapter.AdminUserAdapter;
 import com.example.backup.adapter.AdminVipPackageAdapter;
 import com.example.backup.controller.AdminController;
 import com.example.backup.controller.MovieController;
 import com.example.backup.model.Cast;
+import com.example.backup.model.Comment;
 import com.example.backup.model.DashboardStats;
 import com.example.backup.model.Movie;
 import com.example.backup.model.User;
@@ -57,9 +59,19 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private View adminHeader;
     private ProgressBar progressBar;
 
-    // Tabs (5 tabs)
-    private Button tabBtnStats, tabBtnMovies, tabBtnUsers, tabBtnCasts, tabBtnVip;
-    private View viewTabStats, viewTabMovies, viewTabUsers, viewTabCasts, viewTabVip;
+    // Tabs (6 tabs)
+    private Button tabBtnStats, tabBtnMovies, tabBtnUsers, tabBtnCasts, tabBtnVip, tabBtnComments;
+    private View viewTabStats, viewTabMovies, viewTabUsers, viewTabCasts, viewTabVip, viewTabComments;
+
+    // Search Bars
+    private EditText etSearchAdminMovies, etSearchAdminUsers, etSearchAdminComments;
+
+    // Tab 5: Comments Moderation
+    private TextView tvCommentsCount, tvEmptyComments;
+    private Button btnRefreshComments;
+    private RecyclerView rvComments;
+    private AdminCommentAdapter commentAdapter;
+    private final List<Comment> commentList = new ArrayList<>();
 
     // Tab 0: Stats & Analytics
     private TextView tvStatRevenue, tvStatRevenueSub;
@@ -214,17 +226,19 @@ public class AdminDashboardActivity extends AppCompatActivity {
         adminHeader   = findViewById(R.id.adminHeader);
         progressBar   = findViewById(R.id.adminProgressBar);
 
-        tabBtnStats   = findViewById(R.id.tabBtnStats);
-        tabBtnMovies  = findViewById(R.id.tabBtnMovies);
-        tabBtnUsers   = findViewById(R.id.tabBtnUsers);
-        tabBtnCasts   = findViewById(R.id.tabBtnCasts);
-        tabBtnVip     = findViewById(R.id.tabBtnVip);
+        tabBtnStats    = findViewById(R.id.tabBtnStats);
+        tabBtnMovies   = findViewById(R.id.tabBtnMovies);
+        tabBtnUsers    = findViewById(R.id.tabBtnUsers);
+        tabBtnCasts    = findViewById(R.id.tabBtnCasts);
+        tabBtnVip      = findViewById(R.id.tabBtnVip);
+        tabBtnComments = findViewById(R.id.tabBtnComments);
 
-        viewTabStats  = findViewById(R.id.viewTabStats);
-        viewTabMovies = findViewById(R.id.viewTabMovies);
-        viewTabUsers  = findViewById(R.id.viewTabUsers);
-        viewTabCasts  = findViewById(R.id.viewTabCasts);
-        viewTabVip    = findViewById(R.id.viewTabVip);
+        viewTabStats    = findViewById(R.id.viewTabStats);
+        viewTabMovies   = findViewById(R.id.viewTabMovies);
+        viewTabUsers    = findViewById(R.id.viewTabUsers);
+        viewTabCasts    = findViewById(R.id.viewTabCasts);
+        viewTabVip      = findViewById(R.id.viewTabVip);
+        viewTabComments = findViewById(R.id.viewTabComments);
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -279,6 +293,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
         rvMovies.setAdapter(movieAdapter);
         btnAddMovie.setOnClickListener(v -> showMovieDialog(null));
 
+        etSearchAdminMovies = findViewById(R.id.etSearchAdminMovies);
+        if (etSearchAdminMovies != null) {
+            etSearchAdminMovies.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (movieAdapter != null) movieAdapter.filter(s != null ? s.toString() : "");
+                }
+                @Override public void afterTextChanged(android.text.Editable s) {}
+            });
+        }
+
         // Setup Tab 2: Users
         tvUsersCount    = findViewById(R.id.tvAdminUsersCount);
         tvVipUsersCount = findViewById(R.id.tvAdminVipUsersCount);
@@ -326,6 +351,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
         rvUsers.setAdapter(userAdapter);
+
+        etSearchAdminUsers = findViewById(R.id.etSearchAdminUsers);
+        if (etSearchAdminUsers != null) {
+            etSearchAdminUsers.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (userAdapter != null) userAdapter.filter(s != null ? s.toString() : "");
+                }
+                @Override public void afterTextChanged(android.text.Editable s) {}
+            });
+        }
 
         // Setup Tab 3: Casts
         spinnerCastMovie = findViewById(R.id.spinnerAdminCastMovie);
@@ -406,6 +442,47 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
         rvVipPackages.setAdapter(vipPkgAdapter);
         btnAddVipPkg.setOnClickListener(v -> showVipPackageDialog(null));
+
+        // Setup Tab 5: Comments Moderation
+        tvCommentsCount       = findViewById(R.id.tvAdminCommentsCount);
+        tvEmptyComments       = findViewById(R.id.tvEmptyAdminComments);
+        btnRefreshComments    = findViewById(R.id.btnRefreshComments);
+        etSearchAdminComments = findViewById(R.id.etSearchAdminComments);
+        rvComments            = findViewById(R.id.rvAdminComments);
+        rvComments.setLayoutManager(new LinearLayoutManager(this));
+        commentAdapter        = new AdminCommentAdapter(this, commentList, comment -> {
+            showDeleteConfirmDialog("Xóa Bình Luận",
+                    "Bạn có chắc muốn xóa bình luận của \"" + comment.getUsername() + "\" trên phim \"" + comment.getMovieTitle() + "\"?",
+                    () -> {
+                        AdminController.deleteComment(comment.getId(), new AdminController.AdminCallback() {
+                            @Override
+                            public void onSuccess(String message) {
+                                Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                                loadComments();
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    });
+        });
+        rvComments.setAdapter(commentAdapter);
+
+        if (btnRefreshComments != null) {
+            btnRefreshComments.setOnClickListener(v -> loadComments());
+        }
+
+        if (etSearchAdminComments != null) {
+            etSearchAdminComments.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (commentAdapter != null) commentAdapter.filter(s != null ? s.toString() : "");
+                }
+                @Override public void afterTextChanged(android.text.Editable s) {}
+            });
+        }
     }
 
     private void handleWindowInsets() {
@@ -431,6 +508,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         tabBtnUsers.setOnClickListener(v -> selectTab(2));
         tabBtnCasts.setOnClickListener(v -> selectTab(3));
         tabBtnVip.setOnClickListener(v -> selectTab(4));
+        tabBtnComments.setOnClickListener(v -> selectTab(5));
     }
 
     private void selectTab(int index) {
@@ -439,6 +517,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         viewTabUsers.setVisibility(index == 2 ? View.VISIBLE : View.GONE);
         viewTabCasts.setVisibility(index == 3 ? View.VISIBLE : View.GONE);
         viewTabVip.setVisibility(index == 4 ? View.VISIBLE : View.GONE);
+        viewTabComments.setVisibility(index == 5 ? View.VISIBLE : View.GONE);
 
         int activeColor = ContextCompat.getColor(this, R.color.primary_red);
         int inactiveColor = ContextCompat.getColor(this, R.color.bg_card);
@@ -448,6 +527,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         tabBtnUsers.setBackgroundColor(index == 2 ? activeColor : inactiveColor);
         tabBtnCasts.setBackgroundColor(index == 3 ? activeColor : inactiveColor);
         tabBtnVip.setBackgroundColor(index == 4 ? activeColor : inactiveColor);
+        tabBtnComments.setBackgroundColor(index == 5 ? activeColor : inactiveColor);
 
         switch (index) {
             case 0: loadDashboardStats(); break;
@@ -455,6 +535,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             case 2: loadUsers(); break;
             case 3: loadCastsTab(); break;
             case 4: loadVipPackages(); break;
+            case 5: loadComments(); break;
         }
     }
 
@@ -579,7 +660,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 movieList.clear();
                 if (movies != null) movieList.addAll(movies);
                 tvMoviesCount.setText("Danh sách phim (" + movieList.size() + ")");
-                movieAdapter.notifyDataSetChanged();
+                movieAdapter.setMovies(movieList);
             }
 
             @Override
@@ -757,7 +838,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 }
                 tvUsersCount.setText("Danh sách người dùng (" + userList.size() + ")");
                 tvVipUsersCount.setText(vipCount + " thành viên VIP");
-                userAdapter.notifyDataSetChanged();
+                userAdapter.setUsers(userList);
             }
 
             @Override
@@ -1024,5 +1105,31 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    // =========================================================================
+    // TAB 5: BÌNH LUẬN & ĐÁNH GIÁ (COMMENTS MODERATION)
+    // =========================================================================
+    private void loadComments() {
+        progressBar.setVisibility(View.VISIBLE);
+        AdminController.getAllComments(new AdminController.CommentListCallback() {
+            @Override
+            public void onSuccess(List<Comment> comments) {
+                progressBar.setVisibility(View.GONE);
+                commentList.clear();
+                if (comments != null) commentList.addAll(comments);
+                tvCommentsCount.setText("Quản lý bình luận (" + commentList.size() + ")");
+                if (tvEmptyComments != null) {
+                    tvEmptyComments.setVisibility(commentList.isEmpty() ? View.VISIBLE : View.GONE);
+                }
+                commentAdapter.setComments(commentList);
+            }
+
+            @Override
+            public void onError(String error) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(AdminDashboardActivity.this, "Lỗi tải bình luận: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

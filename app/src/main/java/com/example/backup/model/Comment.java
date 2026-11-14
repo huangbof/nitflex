@@ -9,6 +9,7 @@ public class Comment implements Serializable {
     private String content;
     private String createdAt;
     private String username;
+    private String movieTitle;
 
     public Comment() {}
 
@@ -29,4 +30,7 @@ public class Comment implements Serializable {
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+
+    public String getMovieTitle() { return movieTitle; }
+    public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
 }

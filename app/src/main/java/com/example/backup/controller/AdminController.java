@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import com.example.backup.database.DBConnection;
 import com.example.backup.model.Cast;
+import com.example.backup.model.Comment;
 import com.example.backup.model.DashboardStats;
 import com.example.backup.model.Movie;
 import com.example.backup.model.User;
@@ -43,6 +44,11 @@ public class AdminController {
 
     public interface DashboardStatsCallback {
         void onSuccess(DashboardStats stats);
+        void onError(String error);
+    }
+
+    public interface CommentListCallback {
+        void onSuccess(List<Comment> comments);
         void onError(String error);
     }
 
@@ -517,6 +523,65 @@ public class AdminController {
                 mainHandler.post(() -> callback.onSuccess(stats));
             } catch (Exception e) {
                 mainHandler.post(() -> callback.onError("Lỗi tải thống kê: " + e.getMessage()));
+            }
+        });
+    }
+
+    public static void getAllComments(CommentListCallback callback) {
+        executor.execute(() -> {
+            List<Comment> list = new ArrayList<>();
+            String sql = "SELECT c.id, c.user_id, c.movie_id, c.content, c.created_at, "
+                    + "COALESCE(u.username, 'Ẩn danh') AS username, "
+                    + "COALESCE(m.title, 'Phim đã xóa') AS movie_title "
+                    + "FROM comments c "
+                    + "LEFT JOIN users u ON c.user_id = u.id "
+                    + "LEFT JOIN movies m ON c.movie_id = m.id "
+                    + "ORDER BY c.created_at DESC";
+            try (Connection conn = DBConnection.getConnection()) {
+                if (conn == null) {
+                    mainHandler.post(() -> callback.onError("Không thể kết nối CSDL"));
+                    return;
+                }
+                try (PreparedStatement ps = conn.prepareStatement(sql);
+                     ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        Comment c = new Comment();
+                        c.setId(rs.getInt("id"));
+                        c.setUserId(rs.getInt("user_id"));
+                        c.setMovieId(rs.getInt("movie_id"));
+                        c.setContent(rs.getString("content"));
+                        c.setCreatedAt(rs.getString("created_at"));
+                        c.setUsername(rs.getString("username"));
+                        c.setMovieTitle(rs.getString("movie_title"));
+                        list.add(c);
+                    }
+                    mainHandler.post(() -> callback.onSuccess(list));
+                }
+            } catch (Exception e) {
+                mainHandler.post(() -> callback.onError("Lỗi lấy danh sách bình luận: " + e.getMessage()));
+            }
+        });
+    }
+
+    public static void deleteComment(int commentId, AdminCallback callback) {
+        executor.execute(() -> {
+            String sql = "DELETE FROM comments WHERE id = ?";
+            try (Connection conn = DBConnection.getConnection()) {
+                if (conn == null) {
+                    mainHandler.post(() -> callback.onError("Không thể kết nối CSDL"));
+                    return;
+                }
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setInt(1, commentId);
+                    int affected = ps.executeUpdate();
+                    if (affected > 0) {
+                        mainHandler.post(() -> callback.onSuccess("Đã xóa bình luận thành công"));
+                    } else {
+                        mainHandler.post(() -> callback.onError("Không tìm thấy bình luận cần xóa"));
+                    }
+                }
+            } catch (Exception e) {
+                mainHandler.post(() -> callback.onError("Lỗi xóa bình luận: " + e.getMessage()));
             }
         });
     }

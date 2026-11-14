@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.backup.R;
 import com.example.backup.model.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,13 +27,41 @@ public class AdminMovieAdapter extends RecyclerView.Adapter<AdminMovieAdapter.Vi
     }
 
     private final Context context;
-    private final List<Movie> movies;
+    private final List<Movie> moviesFull = new ArrayList<>();
+    private final List<Movie> moviesDisplay = new ArrayList<>();
     private final OnMovieActionListener listener;
 
     public AdminMovieAdapter(Context context, List<Movie> movies, OnMovieActionListener listener) {
         this.context = context;
-        this.movies = movies;
         this.listener = listener;
+        setMovies(movies);
+    }
+
+    public void setMovies(List<Movie> list) {
+        this.moviesFull.clear();
+        this.moviesDisplay.clear();
+        if (list != null) {
+            this.moviesFull.addAll(list);
+            this.moviesDisplay.addAll(list);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void filter(String query) {
+        moviesDisplay.clear();
+        if (query == null || query.trim().isEmpty()) {
+            moviesDisplay.addAll(moviesFull);
+        } else {
+            String lower = query.toLowerCase().trim();
+            for (Movie m : moviesFull) {
+                boolean matchTitle = m.getTitle() != null && m.getTitle().toLowerCase().contains(lower);
+                boolean matchOrig = m.getOriginalTitle() != null && m.getOriginalTitle().toLowerCase().contains(lower);
+                if (matchTitle || matchOrig) {
+                    moviesDisplay.add(m);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -44,7 +73,7 @@ public class AdminMovieAdapter extends RecyclerView.Adapter<AdminMovieAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Movie m = movies.get(position);
+        Movie m = moviesDisplay.get(position);
         holder.tvTitle.setText(m.getTitle());
 
         String year = (m.getReleaseDate() != null && m.getReleaseDate().length() >= 4)
@@ -55,7 +84,6 @@ public class AdminMovieAdapter extends RecyclerView.Adapter<AdminMovieAdapter.Vi
 
         holder.tvStats.setText(String.format(Locale.US, "★ %.1f TMDB • ID: #%d", m.getVoteAverage(), m.getId()));
 
-        // Phân quyền VIP: điểm TMDB > 8.0
         holder.tvVipBadge.setVisibility(m.isVip() ? View.VISIBLE : View.GONE);
 
         Glide.with(context)
@@ -75,7 +103,7 @@ public class AdminMovieAdapter extends RecyclerView.Adapter<AdminMovieAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return movies != null ? movies.size() : 0;
+        return moviesDisplay.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
