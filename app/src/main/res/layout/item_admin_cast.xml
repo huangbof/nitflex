@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="4dp"
+    app:cardBackgroundColor="@color/bg_card"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Actor Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgAdminCastProfile"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_avatar_circle"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+
+        <!-- Actor Details -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/tvAdminCastActor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Robert Downey Jr."
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAdminCastCharacter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="vai Tony Stark / Iron Man"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Delete Action -->
+        <Button
+            android:id="@+id/btnAdminDeleteCast"
+            android:layout_width="54dp"
+            android:layout_height="32dp"
+            android:text="Xóa"
+            android:textSize="11sp"
+            android:textColor="@color/text_white"
+            android:backgroundTint="@color/primary_red_dark"
+            android:padding="0dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

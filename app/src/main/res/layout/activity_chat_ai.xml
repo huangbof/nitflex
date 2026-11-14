@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chatRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:id="@+id/chatHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/bg_surface">
+
+        <ImageButton
+            android:id="@+id/btnChatBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_genre_chip"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="@color/text_white"
+            android:contentDescription="Quay lại" />
+
+        <TextView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_genre_chip_selected"
+            android:gravity="center"
+            android:text="🤖"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trợ Lý AI Nit Flex"
+                android:textColor="@color/text_white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAiStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● Sẵn sàng tư vấn • Gemini AI"
+                android:textColor="#4CAF50"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnClearChat"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_genre_chip"
+            android:src="@android:drawable/ic_menu_delete"
+            app:tint="@color/text_gray"
+            android:contentDescription="Xóa hội thoại" />
+    </LinearLayout>
+
+    <!-- Quick Question Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="#141414">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/chipHot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔥 Phim hot"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/chipTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🌟 Điểm cao nhất"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/chipAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💥 Hành động"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/chipAnime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎨 Anime"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/chipSciFi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🚀 Viễn tưởng"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/chipActor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🌟 Diễn viên"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/chipMood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="❤️ Tôi đang buồn"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_genre_chip"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Chat Messages List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Typing Indicator: AI đang nhập... -->
+    <LinearLayout
+        android:id="@+id/typingIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="#141414"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_genre_chip_selected"
+            android:gravity="center"
+            android:text="🤖"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_chat_ai"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI đang soạn trả lời"
+                android:textColor="#AAAAAA"
+                android:textSize="13sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="  ●  ●  ●"
+                android:textColor="#E50914"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Input Bar at Bottom -->
+    <LinearLayout
+        android:id="@+id/chatInputBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@color/bg_surface">
+
+        <EditText
+            android:id="@+id/etChatInput"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_genre_chip"
+            android:hint="Hỏi về phim, thể loại, diễn viên..."
+            android:textColorHint="@color/text_gray_dark"
+            android:textColor="@color/text_white"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="13sp"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences" />
+
+        <ImageButton
+            android:id="@+id/btnSendMessage"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_genre_chip_selected"
+            android:src="@drawable/ic_send"
+            app:tint="@color/text_white"
+            android:contentDescription="Gửi" />
+    </LinearLayout>
+
+</LinearLayout>

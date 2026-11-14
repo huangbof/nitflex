@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="140dp"
+    android:layout_height="215dp"
+    android:layout_marginEnd="10dp"
+    app:cardBackgroundColor="@color/bg_card"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Movie Poster -->
+        <ImageView
+            android:id="@+id/imgCwPoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            android:contentDescription="Poster" />
+
+        <!-- Gradient Overlay -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_banner_overlay" />
+
+        <!-- Remove/Delete Button (Top Right) -->
+        <ImageButton
+            android:id="@+id/btnCwRemove"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_control_btn"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/text_white"
+            android:contentDescription="Xóa khỏi danh sách xem tiếp"
+            android:padding="5dp" />
+
+        <!-- Play Circle Overlay (Center) -->
+        <ImageView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_play_circle"
+            android:src="@drawable/ic_play_arrow"
+            android:padding="6dp"
+            app:tint="@color/text_white"
+            android:contentDescription="Phát tiếp" />
+
+        <!-- Bottom Info & Progress Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvCwTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Tên phim"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCwProgressText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Đã xem 14:20"
+                android:textColor="@color/accent_gold"
+                android:textSize="10sp" />
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/pbCwProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:max="100"
+                android:progress="35"
+                android:progressTint="@color/primary_red" />
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

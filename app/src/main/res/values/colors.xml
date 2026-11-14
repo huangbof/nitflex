@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand colors -->
+    <color name="primary_red">#E50914</color>
+    <color name="primary_red_dark">#B20710</color>
+    <color name="accent_red">#E50914</color>
+    <color name="accent_gold">#FFC107</color>
+
+    <!-- Backgrounds -->
+    <color name="bg_dark">#0F0F0F</color>
+    <color name="bg_primary">#0F0F0F</color>
+    <color name="bg_surface">#1A1A1A</color>
+    <color name="bg_card">#222222</color>
+    <color name="bg_card_elevated">#2C2C2C</color>
+
+    <!-- Text colors -->
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_gray_light">#E0E0E0</color>
+    <color name="text_gray">#9E9E9E</color>
+    <color name="text_gray_dark">#616161</color>
+
+    <!-- Controls & Dividers -->
+    <color name="divider_color">#2A2A2A</color>
+    <color name="input_bg">#252525</color>
+    <color name="fav_heart_red">#FF2A4D</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- System defaults -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

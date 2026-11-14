@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_surface"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvAdminDialogMovieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎬 Thêm Phim Mới"
+            android:textColor="@color/text_white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Phim có điểm đánh giá > 8.0 sẽ tự động gắn huy hiệu VIP"
+            android:textColor="@color/accent_gold"
+            android:textSize="12sp" />
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Tên phim (Tiếng Việt):"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/etAdminMovieTitle"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Ví dụ: Kẻ Hủy Diệt 2"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_gray_dark"
+            android:paddingHorizontal="12dp"
+            android:textSize="14sp" />
+
+        <!-- Original Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Tên gốc (Tiếng Anh):"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/etAdminMovieOriginalTitle"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Ví dụ: Terminator 2: Judgment Day"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_gray_dark"
+            android:paddingHorizontal="12dp"
+            android:textSize="14sp" />
+
+        <!-- Rating & Year -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Điểm TMDB (0 - 10):"
+                    android:textColor="@color/text_gray"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etAdminMovieRating"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="8.5"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text_white"
+                    android:textColorHint="@color/text_gray_dark"
+                    android:paddingHorizontal="12dp"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày phát hành:"
+                    android:textColor="@color/text_gray"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etAdminMovieReleaseDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="2024-05-15"
+                    android:textColor="@color/text_white"
+                    android:textColorHint="@color/text_gray_dark"
+                    android:paddingHorizontal="12dp"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Poster URL & Device Picker -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ảnh Poster (URL hoặc chọn từ máy):"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/btnPickPosterFromDevice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_genre_chip_selected"
+                android:text="🖼️ Chọn ảnh từ máy"
+                android:textColor="@color/text_white"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+
+            <EditText
+                android:id="@+id/etAdminMoviePoster"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_field"
+                android:hint="https://image.tmdb.org/... hoặc chọn từ máy"
+                android:textColor="@color/text_white"
+                android:textColorHint="@color/text_gray_dark"
+                android:paddingHorizontal="12dp"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/imgAdminPosterPreview"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_input_field"
+                android:scaleType="centerCrop"
+                android:contentDescription="Xem trước poster"
+                android:src="@drawable/ic_launcher_background"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Video Source (Local MP4 / URL) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nguồn phát Video (File MP4 trong res/raw hoặc URL):"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ưu tiên res/raw"
+                android:textColor="@color/accent_gold"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etAdminMovieVideoUrl"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Ví dụ: raw/endgame, raw/sample_movie..."
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_gray_dark"
+            android:paddingHorizontal="12dp"
+            android:textSize="13sp" />
+
+        <!-- Quick Select Local MP4 Buttons -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chọn nhanh file nội bộ: "
+                    android:textColor="@color/text_gray"
+                    android:textSize="11sp"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/btnQuickRawSample"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_genre_chip"
+                    android:text="📁 sample_movie"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/btnQuickRawEndgame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_genre_chip"
+                    android:text="📁 endgame"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/btnPickVideoFromDevice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_genre_chip_selected"
+                    android:text="📱 Chọn video từ máy"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/tvAdminVideoStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="11sp"
+            android:textColor="@color/accent_gold"
+            android:visibility="gone"
+            android:text="✅ Đã nạp video từ thiết bị vào bộ nhớ ứng dụng" />
+
+        <!-- Overview -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Tóm tắt nội dung phim:"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/etAdminMovieOverview"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_input_field"
+            android:gravity="top"
+            android:hint="Tóm tắt cốt truyện phim..."
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_gray_dark"
+            android:padding="10dp"
+            android:textSize="13sp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="18dp"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnAdminMovieCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Hủy"
+                android:textColor="@color/text_white"
+                android:backgroundTint="#3A3A3C"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btnAdminMovieSave"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:text="Lưu Phim"
+                android:textColor="@color/text_white"
+                android:backgroundTint="@color/primary_red"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

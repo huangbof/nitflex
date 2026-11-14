@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/adminRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:orientation="vertical">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/adminHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <ImageButton
+            android:id="@+id/btnAdminBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            app:tint="@color/text_white" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quản Trị Hệ Thống"
+                    android:textColor="@color/text_white"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_vip_badge"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:text="ADMIN"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Quản lý Phim, Tài khoản, Diễn viên &amp; Gói VIP"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Horizontal Tabs Selector -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_surface"
+        android:scrollbars="none"
+        android:paddingBottom="8dp"
+        android:paddingHorizontal="12dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/tabBtnStats"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="@color/primary_red"
+                android:text="📊 Thống Kê"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="14dp" />
+
+            <Button
+                android:id="@+id/tabBtnMovies"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="@color/bg_card"
+                android:text="🎬 Quản lý Phim"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp" />
+
+            <Button
+                android:id="@+id/tabBtnUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="@color/bg_card"
+                android:text="👥 Tài Khoản"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp" />
+
+            <Button
+                android:id="@+id/tabBtnCasts"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="@color/bg_card"
+                android:text="🎭 Diễn Viên"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp" />
+
+            <Button
+                android:id="@+id/tabBtnVip"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:backgroundTint="@color/bg_card"
+                android:text="👑 Gói VIP"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:paddingHorizontal="14dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <ProgressBar
+        android:id="@+id/adminProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginVertical="16dp"
+        android:visibility="gone" />
+
+    <!-- Container for Tab Contents -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- 0. TAB THỐNG KÊ (DASHBOARD ANALYTICS) -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/viewTabStats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="32dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <!-- Header / Greeting -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tổng Quan Hệ Thống"
+                        android:textColor="@color/text_white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnRefreshStats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:backgroundTint="@color/bg_card_elevated"
+                        android:text="🔄 Làm Mới"
+                        android:textColor="@color/text_white"
+                        android:textSize="11sp"
+                        android:paddingHorizontal="10dp" />
+                </LinearLayout>
+
+                <!-- ROW 1: 2 KPI CARDS (Doanh Thu & Người Dùng) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Card 1: Doanh Thu -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_stat_card"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="💰 Doanh Thu VIP (Ước tính)"
+                            android:textColor="@color/accent_gold"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatRevenue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="0 ₫"
+                            android:textColor="@color/text_white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatRevenueSub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Dựa trên hội viên VIP"
+                            android:textColor="@color/text_gray"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <!-- Card 2: Người Dùng & Tỷ Lệ VIP -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_stat_card"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="👥 Người Dùng &amp; VIP"
+                            android:textColor="@color/text_white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatUsersTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="0 Tài khoản"
+                            android:textColor="@color/text_white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatVipPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="0 VIP • 0 Thường"
+                            android:textColor="@color/accent_gold"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ROW 2: 2 KPI CARDS (Kho Phim & Tương Tác) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <!-- Card 3: Kho Phim -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_stat_card"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎬 Kho Phim Nit Flex"
+                            android:textColor="@color/text_white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatMoviesTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="0 Phim"
+                            android:textColor="@color/text_white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatVipMoviesSub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="0 Phim VIP (>8.0★)"
+                            android:textColor="@color/accent_gold"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <!-- Card 4: Tổng Lượt Xem & Tương tác -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_stat_card"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="👁️ Tổng Lượt Xem"
+                            android:textColor="@color/text_white"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatViewsTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="0 Lượt xem"
+                            android:textColor="@color/text_white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatInteractions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="0 Bình luận • 0 Đánh giá"
+                            android:textColor="@color/text_gray"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- SECTION: TỶ LỆ CHUYỂN ĐỔI VIP PROGRESS BAR -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Tỷ Lệ Hội Viên VIP"
+                            android:textColor="@color/text_white"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvStatConversionRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0.0%"
+                            android:textColor="@color/accent_gold"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbVipConversion"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressTint="@color/accent_gold" />
+
+                    <TextView
+                        android:id="@+id/tvStatConversionDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="0/0 tài khoản đã kích hoạt gói VIP"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- SECTION: TOP 5 PHIM ĐƯỢC XEM NHIỀU NHẤT -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🏆 Top 5 Phim Xem Nhiều Nhất"
+                        android:textColor="@color/text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xếp theo lượt xem"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <!-- Container for dynamically inflated top movies -->
+                <LinearLayout
+                    android:id="@+id/layoutTopMoviesContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvEmptyTopMovies"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="16dp"
+                        android:gravity="center"
+                        android:text="Đang tải dữ liệu top phim..."
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- 1. TAB PHIM -->
+        <LinearLayout
+            android:id="@+id/viewTabMovies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvAdminMoviesCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Danh sách phim (0)"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAdminAddMovie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="+ Thêm Phim"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_white"
+                    android:backgroundTint="@color/primary_red"
+                    android:paddingHorizontal="12dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAdminMovies"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="24dp" />
+        </LinearLayout>
+
+        <!-- 2. TAB TÀI KHOẢN -->
+        <LinearLayout
+            android:id="@+id/viewTabUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvAdminUsersCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Danh sách người dùng (0)"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAdminVipUsersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 VIP"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAdminUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="24dp" />
+        </LinearLayout>
+
+        <!-- 3. TAB DIỄN VIÊN -->
+        <LinearLayout
+            android:id="@+id/viewTabCasts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="14dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chọn phim để quản lý diễn viên:"
+                    android:textColor="@color/text_gray"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerAdminCastMovie"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_input_field"
+                    android:paddingHorizontal="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvAdminCastsCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Diễn viên (0)"
+                        android:textColor="@color/text_white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnAdminAddCast"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="+ Thêm Diễn Viên"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_white"
+                        android:backgroundTint="@color/primary_red"
+                        android:paddingHorizontal="12dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAdminCasts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:paddingBottom="24dp" />
+        </LinearLayout>
+
+        <!-- 4. TAB GÓI VIP -->
+        <LinearLayout
+            android:id="@+id/viewTabVip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvAdminVipPkgCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Danh sách gói VIP (0)"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnAdminAddVipPkg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="+ Thêm Gói VIP"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_white"
+                    android:backgroundTint="@color/accent_gold"
+                    android:paddingHorizontal="12dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAdminVipPackages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="24dp" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

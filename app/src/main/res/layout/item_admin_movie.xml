@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="@color/bg_card"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical">
+
+        <!-- Movie Poster -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="60dp"
+            android:layout_height="85dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/imgAdminMoviePoster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_vip_badge" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Movie Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvAdminMovieTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Avengers: Hồi Kết"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/tvAdminMovieVipBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_vip_badge"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:text="👑 VIP"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAdminMovieSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Avengers: Endgame • 2019"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvAdminMovieStats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="★ 8.4 TMDB • ID: #2"
+                android:textColor="@color/accent_gold"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Actions -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_marginStart="8dp">
+
+            <Button
+                android:id="@+id/btnAdminEditMovie"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
+                android:text="Sửa"
+                android:textSize="12sp"
+                android:textColor="@color/text_white"
+                android:backgroundTint="#3A3A3C"
+                android:padding="0dp" />
+
+            <Button
+                android:id="@+id/btnAdminDeleteMovie"
+                android:layout_width="72dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="4dp"
+                android:text="Xóa"
+                android:textSize="12sp"
+                android:textColor="@color/text_white"
+                android:backgroundTint="@color/primary_red_dark"
+                android:padding="0dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

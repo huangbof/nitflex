@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
+
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="#444444" />
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="14dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ Bộ Lọc Phim Đa Tiêu Chí"
+                android:textColor="@color/text_white"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Tùy chọn kết hợp VIP, năm phát hành, điểm số và sắp xếp"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnFilterClose"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/text_gray" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:maxHeight="420dp"
+        android:paddingHorizontal="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="14dp">
+
+            <!-- 1. PHÂN LOẠI VIP -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👑 Phân Loại Phim"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipFilterVipAll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Tất cả"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_genre_chip_selected"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterVipFree"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Miễn phí"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterVipOnly"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:text="👑 Phim VIP"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+
+            <!-- 2. THỜI KỲ / NĂM PHÁT HÀNH -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="📅 Năm Phát Hành"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipFilterYearAll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Tất cả năm"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip_selected"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterYear2020"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="2020 - Nay"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterYear2010"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="2010 - 2019"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterYearClassic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Trước 2010"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+
+            <!-- 3. SẮP XẾP KẾT QUẢ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="📊 Sắp Xếp Kết Quả"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipFilterSortPop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="🔥 Phổ biến"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip_selected"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterSortRating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="⭐ Điểm cao"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterSortViews"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="👁 Xem nhiều"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterSortLatest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="📅 Mới nhất"
+                    android:textColor="@color/text_white"
+                    android:textSize="11sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+
+            <!-- 4. ĐIỂM ĐÁNH GIÁ TỐI THIỂU -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="⭐ Điểm Đánh Giá Tối Thiểu"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipFilterRatingAll"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Bất kỳ"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_genre_chip_selected"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterRating7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="⭐ Từ 7.0★"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterRating8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:text="🌟 Từ 8.0★ (VIP)"
+                    android:textColor="@color/text_white"
+                    android:textSize="12sp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Buttons: Reset & Apply -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:paddingHorizontal="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnFilterReset"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/bg_card_elevated"
+            android:text="🔄 Đặt Lại"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnFilterApply"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1.8"
+            android:backgroundTint="@color/primary_red"
+            android:text="Áp Dụng Bộ Lọc"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

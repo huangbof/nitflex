@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="12dp"
+    app:cardBackgroundColor="@color/bg_card_elevated">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Close button top-right -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btnVipClose"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/text_gray"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Đóng" />
+        </FrameLayout>
+
+        <!-- Crown Icon -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="👑"
+            android:textSize="48sp" />
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NIT FLEX VIP PASS"
+            android:textColor="@color/accent_gold"
+            android:textSize="22sp"
+            android:letterSpacing="0.05"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mở khóa toàn bộ phim điểm cao > 7.0 TMDB"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Movie notice if triggered from a VIP movie -->
+        <TextView
+            android:id="@+id/tvVipMovieNotice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_genre_chip"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:text="🎬 Phim này đạt điểm cao và chỉ dành riêng cho thành viên VIP."
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp"
+            android:lineSpacingExtra="3dp" />
+
+        <!-- VIP Benefits -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Xem phim bom tấn điểm số > 7.0 không giới hạn"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Chất lượng 4K Ultra HD &amp; mượt mà không quảng cáo"
+                android:textColor="@color/text_gray_light"
+                android:textSize="12sp"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Huy hiệu VIP Hoàng Gia hiển thị trong cộng đồng"
+                android:textColor="@color/accent_gold"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Package 1: Monthly -->
+        <Button
+            android:id="@+id/btnUpgradeMonthly"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:text="👑 KÍCH HOẠT VIP 1 THÁNG • 59.000đ"
+            android:backgroundTint="@color/accent_gold"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="13sp" />
+
+        <!-- Package 2: Yearly -->
+        <Button
+            android:id="@+id/btnUpgradeYearly"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:text="⭐ GÓI 1 NĂM (TIẾT KIỆM 40%) • 499.000đ"
+            android:backgroundTint="@color/bg_card"
+            android:textColor="@color/text_white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

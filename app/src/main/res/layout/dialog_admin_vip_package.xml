@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_surface"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvAdminDialogVipTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="👑 Thêm / Sửa Gói VIP"
+        android:textColor="@color/accent_gold"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Cấu hình gói VIP, mức giá và quyền lợi dành cho thành viên"
+        android:textColor="@color/text_gray"
+        android:textSize="12sp" />
+
+    <!-- Name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Tên gói VIP:"
+        android:textColor="@color/text_gray"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/etAdminPkgName"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="Ví dụ: Gói VIP 3 Tháng"
+        android:textColor="@color/text_white"
+        android:textColorHint="@color/text_gray_dark"
+        android:paddingHorizontal="12dp"
+        android:textSize="14sp" />
+
+    <!-- Code -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Mã định danh gói (Code):"
+        android:textColor="@color/text_gray"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/etAdminPkgCode"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="VIP_3M"
+        android:textColor="@color/text_white"
+        android:textColorHint="@color/text_gray_dark"
+        android:paddingHorizontal="12dp"
+        android:textSize="14sp" />
+
+    <!-- Price & Duration -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá bán (VNĐ):"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/etAdminPkgPrice"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_input_field"
+                android:hint="159000"
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_white"
+                android:textColorHint="@color/text_gray_dark"
+                android:paddingHorizontal="12dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thời hạn (Số ngày):"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/etAdminPkgDuration"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_input_field"
+                android:hint="90"
+                android:inputType="number"
+                android:textColor="@color/text_white"
+                android:textColorHint="@color/text_gray_dark"
+                android:paddingHorizontal="12dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Description -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Mô tả quyền lợi gói:"
+        android:textColor="@color/text_gray"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/etAdminPkgDesc"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_input_field"
+        android:gravity="top"
+        android:hint="Mở khóa kho phim bom tấn > 8.0 TMDB..."
+        android:textColor="@color/text_white"
+        android:textColorHint="@color/text_gray_dark"
+        android:padding="10dp"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="18dp"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnAdminPkgCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Hủy"
+            android:textColor="@color/text_white"
+            android:backgroundTint="#3A3A3C"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnAdminPkgSave"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:text="Lưu Gói VIP"
+            android:textColor="@color/text_white"
+            android:backgroundTint="@color/primary_red"
+            android:textStyle="bold"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/playerRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:keepScreenOn="true">
+
+    <!-- Direct Video Player -->
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
+    <!-- Loading Indicator -->
+    <LinearLayout
+        android:id="@+id/layoutPlayerLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/playerLoading"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminateTint="@color/primary_red" />
+
+        <TextView
+            android:id="@+id/tvLoadingStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Đang kết nối luồng phát phim..."
+            android:textColor="@color/text_gray_light"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Overlay Controls Container (Top Bar + Center Controls + Bottom Bar) -->
+    <RelativeLayout
+        android:id="@+id/layoutControlsOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#26000000"
+        android:visibility="visible">
+
+        <!-- Top Overlay Bar with Gradient -->
+        <LinearLayout
+            android:id="@+id/playerTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp"
+            android:background="@drawable/gradient_player_top">
+
+            <ImageButton
+                android:id="@+id/btnPlayerBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_control_btn"
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/text_white"
+                android:contentDescription="Đóng" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="14dp">
+
+                <TextView
+                    android:id="@+id/tvPlayerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đang phát phim"
+                    android:textColor="@color/text_white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/tvPlayerSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nit Flex HD • 1080p"
+                    android:textColor="@color/text_gray_light"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● 1080p MP4"
+                android:textColor="@color/primary_red"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Center Controls: Tua -10s, Play/Pause, Tua +10s -->
+        <LinearLayout
+            android:id="@+id/layoutCenterControls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Tua lùi 10 giây -->
+            <LinearLayout
+                android:id="@+id/btnRewind10"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:background="@drawable/bg_control_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@android:drawable/ic_media_rew"
+                    app:tint="@color/text_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-10s"
+                    android:textColor="@color/text_white"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Nút Play / Pause tròn đỏ nổi bật -->
+            <ImageButton
+                android:id="@+id/btnPlayPause"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="36dp"
+                android:layout_marginEnd="36dp"
+                android:background="@drawable/bg_play_circle"
+                android:src="@android:drawable/ic_media_pause"
+                app:tint="@color/text_white"
+                android:contentDescription="Phát / Dừng" />
+
+            <!-- Tua tiến 10 giây -->
+            <LinearLayout
+                android:id="@+id/btnForward10"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:background="@drawable/bg_control_btn"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@android:drawable/ic_media_ff"
+                    app:tint="@color/text_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+10s"
+                    android:textColor="@color/text_white"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Bottom Controller Bar with SeekBar & Thời lượng with Gradient -->
+        <LinearLayout
+            android:id="@+id/layoutBottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:background="@drawable/gradient_player_bottom"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp">
+
+            <!-- Thanh tua video SeekBar -->
+            <SeekBar
+                android:id="@+id/playerSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="1000"
+                android:progress="0"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:progressTint="@color/primary_red"
+                android:thumbTint="@color/primary_red" />
+
+            <!-- Hiển thị thời gian & nút xoay màn hình -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvCurrentTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textColor="@color/text_white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / "
+                    android:textColor="@color/text_gray_light"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvTotalDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textColor="@color/text_gray_light"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Nút chuyển đổi xoay ngang / dọc nhanh -->
+                <ImageButton
+                    android:id="@+id/btnToggleOrientation"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/bg_control_btn"
+                    android:src="@android:drawable/ic_menu_rotate"
+                    app:tint="@color/text_white"
+                    android:contentDescription="Xoay màn hình" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
