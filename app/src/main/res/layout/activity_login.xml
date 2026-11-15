@@ -30,7 +30,7 @@
             android:textColor="@color/text_gray"
             android:textSize="13sp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="40dp" />
+            android:layout_marginBottom="36dp" />
 
         <!-- Form Card -->
         <androidx.cardview.widget.CardView
@@ -60,27 +60,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/bg_genre_chip"
-                    android:hint="Tên đăng nhập (ví dụ: admin)"
+                    android:hint="Tên đăng nhập hoặc Email"
                     android:textColorHint="@color/text_gray_dark"
                     android:textColor="@color/text_white"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="16dp"
+                    android:inputType="textNoSuggestions"
+                    android:maxLines="1" />
 
                 <EditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/bg_genre_chip"
-                    android:hint="Mật khẩu (ví dụ: 123456)"
+                    android:hint="Mật khẩu"
                     android:inputType="textPassword"
                     android:textColorHint="@color/text_gray_dark"
                     android:textColor="@color/text_white"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
-                    android:layout_marginBottom="24dp" />
+                    android:layout_marginBottom="24dp"
+                    android:maxLines="1" />
 
                 <Button
                     android:id="@+id/btnLogin"

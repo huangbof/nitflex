@@ -61,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogleSignIn = findViewById(R.id.sign_in_button);
         tvGoToRegister = findViewById(R.id.tvGoToRegister);
 
+        // Nhận username đăng ký chuyển sang nếu có
+        checkRegisteredUsername(getIntent());
+
         // 1. Cấu hình GoogleSignInOptions yêu cầu Email (theo Bước 2 Buổi 10)
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -94,13 +97,19 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-        // Đăng nhập truyền thống bằng tài khoản / mật khẩu Nit Flex
+        // Đăng nhập bằng tên đăng nhập HOẶC Email + Mật khẩu
         btnLogin.setOnClickListener(v -> {
             String u = etUsername.getText().toString().trim();
             String p = etPassword.getText().toString().trim();
 
-            if (u.isEmpty() || p.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            if (u.isEmpty()) {
+                etUsername.setError("Vui lòng nhập tên đăng nhập hoặc email!");
+                etUsername.requestFocus();
+                return;
+            }
+            if (p.isEmpty()) {
+                etPassword.setError("Vui lòng nhập mật khẩu!");
+                etPassword.requestFocus();
                 return;
             }
 
@@ -111,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int userId, String username) {
                     session.setLogin(true, userId, username);
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công! Xin chào " + username, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
@@ -128,6 +137,25 @@ public class LoginActivity extends AppCompatActivity {
         tvGoToRegister.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        checkRegisteredUsername(intent);
+    }
+
+    private void checkRegisteredUsername(Intent intent) {
+        if (intent != null && intent.hasExtra("REGISTERED_USERNAME")) {
+            String registeredUser = intent.getStringExtra("REGISTERED_USERNAME");
+            if (registeredUser != null && !registeredUser.trim().isEmpty() && etUsername != null) {
+                etUsername.setText(registeredUser.trim());
+                if (etPassword != null) {
+                    etPassword.requestFocus();
+                }
+            }
+        }
     }
 
     @Override

@@ -23,25 +23,29 @@ public class AuthController {
         void onError(String message);
     }
 
-    public static void login(String username, String password, AuthCallback callback) {
+    /**
+     * Đăng nhập bằng Tên đăng nhập HOẶC Email kèm mật khẩu
+     */
+    public static void login(String usernameOrEmail, String password, AuthCallback callback) {
         executor.execute(() -> {
             String hash = md5(password);
-            String sql = "SELECT id, username FROM users WHERE username = ? AND password_hash = ?";
+            String sql = "SELECT id, username FROM users WHERE (username = ? OR email = ?) AND password_hash = ?";
             try (Connection conn = DBConnection.getConnection()) {
                 if (conn == null) {
                     mainHandler.post(() -> callback.onError("Không thể kết nối đến MySQL. Hãy chắc chắn XAMPP đã Start MySQL!"));
                     return;
                 }
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    ps.setString(1, username);
-                    ps.setString(2, hash);
+                    ps.setString(1, usernameOrEmail);
+                    ps.setString(2, usernameOrEmail);
+                    ps.setString(3, hash);
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             int id = rs.getInt("id");
                             String name = rs.getString("username");
                             mainHandler.post(() -> callback.onSuccess(id, name));
                         } else {
-                            mainHandler.post(() -> callback.onError("Sai tên đăng nhập hoặc mật khẩu!"));
+                            mainHandler.post(() -> callback.onError("Sai tên đăng nhập/email hoặc mật khẩu!"));
                         }
                     }
                 }
@@ -98,29 +102,32 @@ public class AuthController {
                 // 3. Lưu tài khoản Google vào CSDL users
                 try (PreparedStatement psInsert = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     psInsert.setString(1, uniqueUsername);
-                    psInsert.setString(2, md5("GOOGLE_AUTH_" + email));
+                    psInsert.setString(2, md5("google_oauth_" + System.currentTimeMillis()));
                     psInsert.setString(3, email);
                     int affected = psInsert.executeUpdate();
                     if (affected > 0) {
-                        try (ResultSet rsGen = psInsert.getGeneratedKeys()) {
-                            int newId = rsGen.next() ? rsGen.getInt(1) : 0;
-                            final String finalName = uniqueUsername;
+                        try (ResultSet rs = psInsert.getGeneratedKeys()) {
+                            int newId = rs.next() ? rs.getInt(1) : 0;
+                            String finalName = uniqueUsername;
                             mainHandler.post(() -> callback.onSuccess(newId, finalName));
                         }
                     } else {
-                        mainHandler.post(() -> callback.onError("Không thể lưu tài khoản Google vào CSDL!"));
+                        mainHandler.post(() -> callback.onError("Không thể đồng bộ tài khoản Google vào CSDL!"));
                     }
                 }
             } catch (Exception e) {
-                // Fallback nếu có lỗi CSDL
-                mainHandler.post(() -> callback.onSuccess(9999, displayName != null ? displayName : email));
+                // Fallback offline nếu có lỗi kết nối
+                mainHandler.post(() -> callback.onSuccess(9999, displayName != null ? displayName : "Google User"));
             }
         });
     }
 
+    /**
+     * Đăng ký tài khoản thành viên mới với kiểm tra trùng lặp chi tiết
+     */
     public static void register(String username, String password, String email, AuthCallback callback) {
         executor.execute(() -> {
-            String checkSql = "SELECT id FROM users WHERE username = ? OR email = ?";
+            String checkSql = "SELECT id, username, email FROM users WHERE username = ? OR email = ?";
             String insertSql = "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)";
             try (Connection conn = DBConnection.getConnection()) {
                 if (conn == null) {
@@ -133,7 +140,13 @@ public class AuthController {
                     psCheck.setString(2, email);
                     try (ResultSet rs = psCheck.executeQuery()) {
                         if (rs.next()) {
-                            mainHandler.post(() -> callback.onError("Tên đăng nhập hoặc Email đã tồn tại!"));
+                            String foundU = rs.getString("username");
+                            String foundE = rs.getString("email");
+                            if (username.equalsIgnoreCase(foundU)) {
+                                mainHandler.post(() -> callback.onError("Tên đăng nhập '" + username + "' đã được sử dụng!"));
+                            } else {
+                                mainHandler.post(() -> callback.onError("Địa chỉ Email '" + email + "' đã được đăng ký tài khoản!"));
+                            }
                             return;
                         }
                     }

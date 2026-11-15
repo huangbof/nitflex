@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="28dp"
+        android:padding="24dp"
         android:gravity="center">
 
         <!-- Logo -->
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="🎬 NIT FLEX"
             android:textColor="@color/primary_red"
-            android:textSize="36sp"
+            android:textSize="34sp"
             android:letterSpacing="0.08"
             android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:textColor="@color/text_gray"
             android:textSize="13sp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="36dp" />
+            android:layout_marginBottom="24dp" />
 
         <!-- Form Card -->
         <androidx.cardview.widget.CardView
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="22dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -53,53 +53,77 @@
                     android:textColor="@color/text_white"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="18dp" />
 
+                <!-- Tên đăng nhập -->
                 <EditText
                     android:id="@+id/etRegUsername"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/bg_genre_chip"
-                    android:hint="Tên đăng nhập"
+                    android:hint="Tên đăng nhập (tối thiểu 3 ký tự)"
                     android:textColorHint="@color/text_gray_dark"
                     android:textColor="@color/text_white"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
-                    android:layout_marginBottom="14dp" />
+                    android:layout_marginBottom="12dp"
+                    android:inputType="textNoSuggestions"
+                    android:maxLines="1" />
 
+                <!-- Email -->
                 <EditText
                     android:id="@+id/etRegEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/bg_genre_chip"
-                    android:hint="Địa chỉ Email"
+                    android:hint="Địa chỉ Email (ví dụ: user@gmail.com)"
                     android:inputType="textEmailAddress"
                     android:textColorHint="@color/text_gray_dark"
                     android:textColor="@color/text_white"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
-                    android:layout_marginBottom="14dp" />
+                    android:layout_marginBottom="12dp"
+                    android:maxLines="1" />
 
+                <!-- Mật khẩu -->
                 <EditText
                     android:id="@+id/etRegPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/bg_genre_chip"
-                    android:hint="Mật khẩu"
+                    android:hint="Mật khẩu (tối thiểu 6 ký tự)"
                     android:inputType="textPassword"
                     android:textColorHint="@color/text_gray_dark"
                     android:textColor="@color/text_white"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
-                    android:layout_marginBottom="24dp" />
+                    android:layout_marginBottom="12dp"
+                    android:maxLines="1" />
 
+                <!-- Xác nhận mật khẩu -->
+                <EditText
+                    android:id="@+id/etRegConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_genre_chip"
+                    android:hint="Xác nhận mật khẩu"
+                    android:inputType="textPassword"
+                    android:textColorHint="@color/text_gray_dark"
+                    android:textColor="@color/text_white"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="22dp"
+                    android:maxLines="1" />
+
+                <!-- Nút đăng ký -->
                 <Button
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:text="ĐĂNG KÝ NGAY"
                     android:backgroundTint="@color/primary_red"
                     android:textColor="@color/text_white"
@@ -110,6 +134,7 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Chuyển sang màn hình Đăng nhập -->
         <TextView
             android:id="@+id/tvGoToLogin"
             android:layout_width="wrap_content"
@@ -117,7 +142,7 @@
             android:text="Đã có tài khoản? Đăng nhập tại đây ➔"
             android:textColor="@color/primary_red"
             android:textSize="14sp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="20dp"
             android:padding="8dp" />
 
     </LinearLayout>
