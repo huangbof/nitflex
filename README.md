@@ -1,12 +1,6 @@
-# 🎬 NIT FLEX - Modern Android Movie Streaming & AI Assistant Platform
+# 🎬 NIT FLEX - Ứng dụng xem phim dành cho điện thoạt
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android" />
-  <img src="https://img.shields.io/badge/Language-Java%2021-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
-  <img src="https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
-  <img src="https://img.shields.io/badge/AI-Google%20Gemini%201.5%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini" />
-  <img src="https://img.shields.io/badge/Architecture-MVC%20%2B%20Fragments-E50914?style=for-the-badge" alt="Architecture" />
-</p>
+
 
 ---
 
