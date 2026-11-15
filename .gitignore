@@ -10,3 +10,4 @@
 local.properties
 compare.py
 test_sql.py
+*.docx
