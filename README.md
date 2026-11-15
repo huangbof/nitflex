@@ -68,9 +68,7 @@ backup/
 │   │   ├── util/                              # Dialog helpers (VipDialogHelper...)
 │   │   └── view/                              # Activities (AdminDashboard, Player, Detail, Login, Splash...)
 │   └── src/main/res/                          # Layouts, Menus, Drawables, Colors, Themes
-├── src/main/java/                             # Java Servlet Backend (REST API alternative)
 ├── movie_db.sql                               # Script khởi tạo toàn bộ CSDL MySQL
-└── build.gradle.kts                           # Gradle dependencies & configuration
 ```
 
 ---
