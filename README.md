@@ -1,4 +1,4 @@
-# 🎬 NIT FLEX - Ứng dụng xem phim dành cho điện thoạt
+# 🎬 NIT FLEX - Ứng dụng xem phim dành cho điện thoại
 
 
 
