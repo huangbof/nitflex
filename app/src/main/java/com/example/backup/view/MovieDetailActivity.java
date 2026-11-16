@@ -341,14 +341,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (movie == null) return;
         int targetId = movie.getId() > 0 ? movie.getId() : movieId;
         int localProg = session.getLocalWatchProgress(targetId);
-        if (localProg > 10) {
+        if (localProg > 0) {
             movie.setWatchProgress(localProg);
             btnWatch.setText("▶ Tiếp Tục Xem (" + movie.getFormattedWatchProgress() + ")");
         }
 
         if (session.isLoggedIn() && targetId > 0) {
             MovieController.getWatchProgress(session.getUserId(), targetId, progressSec -> {
-                if (progressSec > 10) {
+                if (progressSec > 0) {
                     movie.setWatchProgress(progressSec);
                     btnWatch.setText("▶ Tiếp Tục Xem (" + movie.getFormattedWatchProgress() + ")");
                 }

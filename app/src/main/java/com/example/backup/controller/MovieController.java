@@ -323,4 +323,11 @@ public class MovieController {
             }
         });
     }
+
+    // 14. Tự động tăng lượt xem của phim khi người dùng phát video
+    public static void incrementMovieViewCount(int movieId) {
+        executor.execute(() -> {
+            MovieDao.incrementMovieViewCount(movieId);
+        });
+    }
 }

@@ -29,6 +29,25 @@ public class AdminDao {
         try (Statement st = conn.createStatement()) {
             st.executeUpdate("ALTER TABLE users ADD COLUMN IF NOT EXISTS is_vip TINYINT DEFAULT 0");
             st.executeUpdate("ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) DEFAULT 'user'");
+
+            // Tự động kiểm tra và khởi tạo lượt xem mẫu nếu tất cả phim đang bằng 0 lượt xem
+            try (ResultSet rs = st.executeQuery("SELECT SUM(view_count) FROM movies")) {
+                if (rs.next() && rs.getInt(1) == 0) {
+                    st.executeUpdate("UPDATE movies SET view_count = CASE "
+                            + "WHEN tmdb_id = 299536 THEN 15420 "
+                            + "WHEN tmdb_id = 299534 THEN 14850 "
+                            + "WHEN tmdb_id = 19995  THEN 12300 "
+                            + "WHEN tmdb_id = 76600  THEN 11650 "
+                            + "WHEN tmdb_id = 157336 THEN 9820 "
+                            + "WHEN tmdb_id = 27205  THEN 8740 "
+                            + "WHEN tmdb_id = 550    THEN 7600 "
+                            + "WHEN tmdb_id = 238    THEN 7200 "
+                            + "WHEN tmdb_id = 372058 THEN 6950 "
+                            + "WHEN tmdb_id = 129    THEN 6400 "
+                            + "ELSE (3200 + (id * 179) % 3600) END "
+                            + "WHERE view_count = 0");
+                }
+            } catch (Exception ignored) {}
         } catch (Exception ignored) {}
     }
 
@@ -48,7 +67,11 @@ public class AdminDao {
                 ps.setDouble(7, m.getVoteAverage());
                 ps.setDouble(8, m.getPopularity() > 0 ? m.getPopularity() : 50.0);
                 ps.setString(9, m.getVideoUrl());
-                ps.setInt(10, m.getGenreId());
+                if (m.getGenreId() > 0) {
+                    ps.setInt(10, m.getGenreId());
+                } else {
+                    ps.setNull(10, java.sql.Types.INTEGER);
+                }
                 return ps.executeUpdate() > 0;
             }
         }
@@ -69,7 +92,11 @@ public class AdminDao {
                 ps.setString(6, m.getReleaseDate());
                 ps.setDouble(7, m.getVoteAverage());
                 ps.setString(8, m.getVideoUrl());
-                ps.setInt(9, m.getGenreId());
+                if (m.getGenreId() > 0) {
+                    ps.setInt(9, m.getGenreId());
+                } else {
+                    ps.setNull(9, java.sql.Types.INTEGER);
+                }
                 ps.setInt(10, m.getId());
                 return ps.executeUpdate() > 0;
             }
@@ -80,6 +107,10 @@ public class AdminDao {
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) throw new SQLException("Không thể kết nối CSDL MySQL!");
             try (PreparedStatement ps = conn.prepareStatement("DELETE FROM favorites WHERE movie_id = ?")) {
+                ps.setInt(1, movieId);
+                ps.executeUpdate();
+            } catch (Exception ignored) {}
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM movie_ratings WHERE movie_id = ?")) {
                 ps.setInt(1, movieId);
                 ps.executeUpdate();
             } catch (Exception ignored) {}
@@ -155,9 +186,16 @@ public class AdminDao {
     }
 
     public static boolean deleteUser(int userId) throws SQLException {
+        if (userId == 1) {
+            throw new SQLException("Không thể xóa tài khoản Quản trị viên gốc (admin)!");
+        }
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) throw new SQLException("Không thể kết nối CSDL MySQL!");
             try (PreparedStatement ps = conn.prepareStatement("DELETE FROM favorites WHERE user_id = ?")) {
+                ps.setInt(1, userId);
+                ps.executeUpdate();
+            } catch (Exception ignored) {}
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM movie_ratings WHERE user_id = ?")) {
                 ps.setInt(1, userId);
                 ps.executeUpdate();
             } catch (Exception ignored) {}
@@ -211,8 +249,13 @@ public class AdminDao {
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) throw new SQLException("Không thể kết nối CSDL MySQL!");
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                String code = pkg.getCode();
+                if (code == null || code.trim().isEmpty()) {
+                    code = pkg.getName().replaceAll("[^a-zA-Z0-9_]", "_").toUpperCase();
+                    if (code.isEmpty()) code = "VIP_" + System.currentTimeMillis();
+                }
                 ps.setString(1, pkg.getName());
-                ps.setString(2, pkg.getName().replaceAll("\\s+", "_").toUpperCase());
+                ps.setString(2, code);
                 ps.setDouble(3, pkg.getPrice());
                 ps.setInt(4, pkg.getDurationDays());
                 ps.setString(5, pkg.getDescription());
@@ -338,6 +381,7 @@ public class AdminDao {
                     c.setContent(rs.getString("content"));
                     c.setCreatedAt(rs.getString("created_at"));
                     c.setUsername(rs.getString("username"));
+                    c.setMovieTitle(rs.getString("movie_title"));
                     list.add(c);
                 }
             }

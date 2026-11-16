@@ -70,6 +70,14 @@ public class FavoritesFragment extends Fragment {
         loadFavorites();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            loadFavorites();
+        }
+    }
+
     private void initViews(View view) {
         btnBack      = view.findViewById(R.id.btnFavBack);
         tvBadgeCount = view.findViewById(R.id.tvFavBadgeCount);

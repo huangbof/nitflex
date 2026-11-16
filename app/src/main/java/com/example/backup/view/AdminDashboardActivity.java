@@ -334,6 +334,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
             @Override
             public void onDelete(User user) {
+                if ("admin".equalsIgnoreCase(user.getUsername()) || user.getId() == 1) {
+                    Toast.makeText(AdminDashboardActivity.this, "Không thể xóa tài khoản Quản trị viên gốc (admin)!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 showDeleteConfirmDialog("Xóa Tài Khoản", "Xóa người dùng \"" + user.getUsername() + "\"?", () -> {
                     AdminController.deleteUser(user.getId(), new AdminController.AdminCallback() {
                         @Override
@@ -779,6 +783,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
             m.setPosterPath(etPoster.getText().toString().trim());
             m.setVideoUrl(etVideo.getText().toString().trim());
             m.setOverview(etOverview.getText().toString().trim());
+            if (m.getGenreId() <= 0) {
+                m.setGenreId(28); // Mặc định thể loại Hành Động (28)
+            }
 
             dialog.dismiss();
             progressBar.setVisibility(View.VISIBLE);

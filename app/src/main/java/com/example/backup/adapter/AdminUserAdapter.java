@@ -1,6 +1,8 @@
 package com.example.backup.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,15 +85,33 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.View
                 ? u.getCreatedAt().substring(0, 10) : "Gần đây";
         holder.tvId.setText("ID: #" + u.getId() + " • Tham gia: " + dateStr);
 
-        if (u.isVip()) {
-            holder.tvBadge.setText("👑 VIP");
+        boolean isRootAdmin = u.getId() == 1 || "admin".equalsIgnoreCase(u.getUsername());
+        if (isRootAdmin) {
+            holder.tvBadge.setText("🛡️ ADMIN");
             holder.tvBadge.setVisibility(View.VISIBLE);
-            holder.btnToggleVip.setText("Hủy VIP");
-            holder.btnToggleVip.setTextColor(context.getResources().getColor(R.color.text_gray_light));
+            holder.btnDelete.setVisibility(View.GONE);
+            holder.btnToggleVip.setVisibility(View.GONE);
+            holder.btnResetPass.setVisibility(View.VISIBLE);
+            holder.btnResetPass.setText("🔑 Đặt lại");
+            holder.btnResetPass.getLayoutParams().width = (int) (88 * context.getResources().getDisplayMetrics().density);
         } else {
-            holder.tvBadge.setVisibility(View.GONE);
-            holder.btnToggleVip.setText("Nâng VIP");
-            holder.btnToggleVip.setTextColor(context.getResources().getColor(R.color.accent_gold));
+            holder.btnDelete.setVisibility(View.VISIBLE);
+            holder.btnToggleVip.setVisibility(View.VISIBLE);
+            holder.btnResetPass.setVisibility(View.VISIBLE);
+            holder.btnResetPass.setText("🔑");
+            holder.btnResetPass.getLayoutParams().width = (int) (40 * context.getResources().getDisplayMetrics().density);
+            if (u.isVip()) {
+                holder.tvBadge.setText("👑 VIP");
+                holder.tvBadge.setVisibility(View.VISIBLE);
+                holder.btnToggleVip.setText("Hủy VIP");
+                holder.btnToggleVip.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#3A3A3C")));
+                holder.btnToggleVip.setTextColor(Color.parseColor("#FF5252"));
+            } else {
+                holder.tvBadge.setVisibility(View.GONE);
+                holder.btnToggleVip.setText("👑 Nâng VIP");
+                holder.btnToggleVip.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFC107")));
+                holder.btnToggleVip.setTextColor(Color.parseColor("#000000"));
+            }
         }
 
         holder.btnToggleVip.setOnClickListener(v -> {

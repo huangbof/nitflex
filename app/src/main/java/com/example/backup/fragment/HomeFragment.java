@@ -243,6 +243,14 @@ public class HomeFragment extends Fragment {
         loadContinueWatchingMovies();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            loadContinueWatchingMovies();
+        }
+    }
+
     private void launchPlayerForMovie(Movie movie) {
         Intent intent = new Intent(requireContext(), PlayerActivity.class);
         intent.putExtra("movie_id", movie.getId());
@@ -295,7 +303,7 @@ public class HomeFragment extends Fragment {
                     for (int wId : watchedIds) {
                         int localProg = session.getLocalWatchProgress(wId);
                         int localDur = session.getLocalWatchDuration(wId);
-                        if (localProg >= 10) {
+                        if (localDur <= 0 || localProg < (localDur - 5)) {
                             for (Movie m : allMovies) {
                                 if (m.getId() == wId || m.getTmdbId() == wId) {
                                     m.setWatchProgress(localProg);

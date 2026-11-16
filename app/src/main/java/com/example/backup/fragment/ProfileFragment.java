@@ -155,6 +155,14 @@ public class ProfileFragment extends Fragment {
         loadData();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            loadData();
+        }
+    }
+
     private void loadData() {
         loadFavoriteCount();
         loadWatchHistory();

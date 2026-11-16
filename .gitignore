@@ -11,3 +11,5 @@ local.properties
 compare.py
 test_sql.py
 *.docx
+*.mp4
+!app/src/main/res/raw/.gitkeep

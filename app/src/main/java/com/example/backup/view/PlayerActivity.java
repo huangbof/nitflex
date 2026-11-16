@@ -1,7 +1,11 @@
 package com.example.backup.view;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -67,6 +71,12 @@ public class PlayerActivity extends AppCompatActivity {
     private int totalDuration = 0;
     private int currentPosition = 0;
     private boolean isEndgameMovie = false;
+    private boolean isMovieCompleted = false;
+
+    // Quản lý âm lượng và Audio Focus chống mất tiếng
+    private AudioManager audioManager;
+    private AudioFocusRequest audioFocusRequest;
+    private MediaPlayer currentMediaPlayer;
 
     private final Handler progressHandler = new Handler(Looper.getMainLooper());
     private final Handler hideControlsHandler = new Handler(Looper.getMainLooper());
@@ -102,6 +112,11 @@ public class PlayerActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_player);
 
+        // Khóa luồng điều khiển âm lượng vật lý là STREAM_MUSIC và đảm bảo có tiếng
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        checkAndEnsureAudio();
+        requestAudioFocus();
+
         session = new SessionManager(this);
         movieId    = getIntent().getIntExtra("movie_id", -1);
         videoUrl   = getIntent().getStringExtra("video_url");
@@ -126,14 +141,14 @@ public class PlayerActivity extends AppCompatActivity {
             currentPosition = passedPosition;
         } else if (movieId > 0) {
             int localSaved = session.getLocalWatchProgress(movieId) * 1000;
-            if (localSaved > 5000) {
+            if (localSaved > 0) {
                 currentPosition = localSaved;
             }
         }
 
         if (movieId > 0 && currentPosition <= 0 && session.isLoggedIn()) {
             MovieController.getWatchProgress(session.getUserId(), movieId, progressSec -> {
-                if (progressSec > 5) {
+                if (progressSec > 0) {
                     currentPosition = progressSec * 1000;
                     if (videoView != null && videoView.isPlaying()) {
                         videoView.seekTo(currentPosition);
@@ -325,17 +340,11 @@ public class PlayerActivity extends AppCompatActivity {
         int pos = videoView.getCurrentPosition();
         int dur = videoView.getDuration();
 
-        // Xử lý bù thời lượng nếu hệ điều hành đọc ban đầu bằng 0
-        if (dur <= 0) {
-            if (isEndgameMovie) {
-                dur = 284500; // 4 phút 44.5 giây
-            } else {
-                dur = 60000;
-            }
-        }
-
         if (dur > 0 && dur != totalDuration) {
             totalDuration = dur;
+            playerSeekBar.setMax(totalDuration);
+            tvTotalDuration.setText(formatTime(totalDuration));
+        } else if (totalDuration > 0 && playerSeekBar.getMax() != totalDuration) {
             playerSeekBar.setMax(totalDuration);
             tvTotalDuration.setText(formatTime(totalDuration));
         }
@@ -420,18 +429,31 @@ public class PlayerActivity extends AppCompatActivity {
         final Uri finalRawUri = resolvedUri;
         final int finalRawResId = rawResId;
 
-        // Chuẩn hóa file MP4 (khử phân mảnh fMP4) để VideoView tua mượt mà và nhận đúng thời lượng 100%
-        VideoRemuxer.prepareVideoUri(this, finalRawUri, finalRawResId, (playableUri, durationMs) -> {
-            if (isDestroyed() || isFinishing()) return;
+        // Tự động kiểm tra xem video có bị phân mảnh fMP4 (Endgame, Infinity War, Avatar...) hay không
+        boolean isFmp4 = VideoRemuxer.isFragmentedMp4(this, finalRawUri, finalRawResId);
 
-            if (durationMs > 0) {
-                totalDuration = durationMs;
+        if (isFmp4) {
+            VideoRemuxer.prepareVideoUri(this, finalRawUri, finalRawResId, (playableUri, durationMs) -> {
+                if (isDestroyed() || isFinishing()) return;
+
+                if (durationMs > 0) {
+                    totalDuration = durationMs;
+                    playerSeekBar.setMax(totalDuration);
+                    tvTotalDuration.setText(formatTime(totalDuration));
+                }
+
+                startPlayerWithUri(playableUri);
+            });
+        } else {
+            // Video MP4 tiêu chuẩn phát trực tiếp
+            int detectedDur = VideoRemuxer.detectMediaDurationMs(this, finalRawUri, finalRawResId);
+            if (detectedDur > 0) {
+                totalDuration = detectedDur;
                 playerSeekBar.setMax(totalDuration);
                 tvTotalDuration.setText(formatTime(totalDuration));
             }
-
-            startPlayerWithUri(playableUri);
-        });
+            startPlayerWithUri(finalRawUri);
+        }
     }
 
     private void startPlayerWithUri(Uri videoUri) {
@@ -440,24 +462,43 @@ public class PlayerActivity extends AppCompatActivity {
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                currentMediaPlayer = mp;
                 layoutLoading.setVisibility(View.GONE);
                 mp.setLooping(false);
 
-                int dur = mp.getDuration();
-                if (dur <= 0 && isEndgameMovie) {
-                    dur = 284500;
+                // Khóa luồng âm thanh Media và đặt âm lượng tối đa 1.0f
+                try {
+                    mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    mp.setVolume(1.0f, 1.0f);
+                } catch (Exception e) {
+                    Log.w(TAG, "Không thể gán âm lượng MediaPlayer: " + e.getMessage());
                 }
+
+                int dur = mp.getDuration();
                 if (dur > 0) {
                     totalDuration = dur;
+                } else if (totalDuration <= 0) {
+                    totalDuration = VideoRemuxer.detectMediaDurationMs(PlayerActivity.this, videoUri, 0);
+                }
+
+                if (totalDuration > 0) {
                     playerSeekBar.setMax(totalDuration);
                     tvTotalDuration.setText(formatTime(totalDuration));
                 }
 
                 if (currentPosition > 0) {
+                    if (totalDuration > 5000 && currentPosition >= totalDuration - 5000) {
+                        currentPosition = 0; // Đã xem hết phim thì phát lại từ đầu
+                    }
                     videoView.seekTo(currentPosition);
                 }
                 videoView.start();
                 btnPlayPause.setImageResource(android.R.drawable.ic_media_pause);
+
+                // Tự động tăng lượt xem phim trong CSDL MySQL
+                if (movieId > 0) {
+                    MovieController.incrementMovieViewCount(movieId);
+                }
 
                 progressHandler.post(updateProgressRunnable);
                 showControlsWithTimeout();
@@ -476,13 +517,22 @@ public class PlayerActivity extends AppCompatActivity {
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                // Kiểm tra xem có thực sự phát đến cuối phim không (tránh trường hợp MediaPlayer báo hoàn tất sớm)
+                int current = videoView.getCurrentPosition();
+                if (totalDuration > 5000 && current < totalDuration - 3000) {
+                    // Chưa đến cuối phim mà bị ngắt: tiếp tục phát
+                    videoView.seekTo(current);
+                    videoView.start();
+                    return;
+                }
+                isMovieCompleted = true;
                 btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
                 showControlsWithTimeout();
-                // Đã xem hết phim: đặt tiến độ về 0
+                // Đã xem hết phim: đặt tiến độ bằng tổng thời lượng (durSec) để tự động ẩn khỏi Tiếp Tục Xem
                 int durSec = totalDuration > 0 ? (totalDuration / 1000) : 7200;
-                session.saveLocalWatchProgress(movieId, 0, durSec);
+                session.saveLocalWatchProgress(movieId, durSec, durSec);
                 if (session.isLoggedIn() && movieId > 0) {
-                    MovieController.saveWatchProgress(session.getUserId(), movieId, 0, durSec);
+                    MovieController.saveWatchProgress(session.getUserId(), movieId, durSec, durSec);
                 }
                 Toast.makeText(PlayerActivity.this, "Bạn đã xem xong phim!", Toast.LENGTH_SHORT).show();
             }
@@ -521,6 +571,12 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         enableImmersiveCinemaMode();
+        requestAudioFocus();
+        if (currentMediaPlayer != null) {
+            try {
+                currentMediaPlayer.setVolume(1.0f, 1.0f);
+            } catch (Exception ignored) {}
+        }
         if (videoView != null && currentPosition > 0) {
             videoView.seekTo(currentPosition);
             videoView.start();
@@ -535,13 +591,79 @@ public class PlayerActivity extends AppCompatActivity {
         progressHandler.removeCallbacks(updateProgressRunnable);
         hideControlsHandler.removeCallbacks(autoHideRunnable);
         saveCurrentProgressToHistory();
+        abandonAudioFocus();
         if (videoView != null) {
             videoView.stopPlayback();
         }
     }
 
+    // Tự động kiểm tra và mở âm lượng Media nếu máy đang bị tắt tiếng (Mute / 0)
+    private void checkAndEnsureAudio() {
+        try {
+            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            if (am != null) {
+                int currentVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                int maxVol = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                if (currentVol == 0 && maxVol > 0) {
+                    int defaultVol = Math.max(1, (int) (maxVol * 0.6));
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, defaultVol, AudioManager.FLAG_SHOW_UI);
+                    Toast.makeText(this, "Đã tự động bật âm lượng phát phim", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Không thể kiểm tra âm lượng hệ thống: " + e.getMessage());
+        }
+    }
+
+    // Yêu cầu Audio Focus để hệ thống Android ưu tiên phát âm thanh phim, không bị các luồng khác can thiệp
+    private void requestAudioFocus() {
+        try {
+            if (audioManager == null) {
+                audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            }
+            if (audioManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    AudioAttributes playbackAttributes = new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                            .build();
+                    audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                            .setAudioAttributes(playbackAttributes)
+                            .setAcceptsDelayedFocusGain(true)
+                            .setOnAudioFocusChangeListener(focusChange -> {
+                                if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                                    if (videoView != null && videoView.isPlaying()) {
+                                        videoView.pause();
+                                        btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
+                                    }
+                                }
+                            })
+                            .build();
+                    audioManager.requestAudioFocus(audioFocusRequest);
+                } else {
+                    audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Lỗi yêu cầu Audio Focus: " + e.getMessage());
+        }
+    }
+
+    // Giải phóng Audio Focus khi thoát xem phim
+    private void abandonAudioFocus() {
+        try {
+            if (audioManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+                    audioManager.abandonAudioFocusRequest(audioFocusRequest);
+                } else {
+                    audioManager.abandonAudioFocus(null);
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
     private void saveCurrentProgressToHistory() {
-        if (movieId <= 0) return;
+        if (movieId <= 0 || isMovieCompleted) return;
         int currentMs = (videoView != null && videoView.getCurrentPosition() > 0)
                 ? videoView.getCurrentPosition() : currentPosition;
         int posSec = currentMs > 0 ? (currentMs / 1000) : 0;

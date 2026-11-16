@@ -84,8 +84,8 @@ public class WatchHistoryDao {
     public static List<Movie> getContinueWatchingMovies(int userId) throws SQLException {
         String sql = "SELECT m.*, wh.progress as watch_progress, IFNULL(wh.duration, 0) as watch_duration FROM movies m "
                    + "INNER JOIN watch_history wh ON m.id = wh.movie_id "
-                   + "WHERE wh.user_id = ? AND wh.progress >= 10 "
-                   + "  AND (wh.duration <= 0 OR wh.progress < (wh.duration - 15)) "
+                   + "WHERE wh.user_id = ? "
+                   + "  AND (wh.duration <= 0 OR wh.progress < (wh.duration - 5)) "
                    + "ORDER BY wh.watched_at DESC LIMIT 15";
         List<Movie> list = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {

@@ -315,7 +315,7 @@ public class HomeActivity extends AppCompatActivity {
                     for (int wId : watchedIds) {
                         int localProg = session.getLocalWatchProgress(wId);
                         int localDur = session.getLocalWatchDuration(wId);
-                        if (localProg >= 10) {
+                        if (localDur <= 0 || localProg < (localDur - 5)) {
                             for (Movie m : all) {
                                 if (m.getId() == wId || m.getTmdbId() == wId) {
                                     m.setWatchProgress(localProg);

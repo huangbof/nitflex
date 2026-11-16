@@ -240,4 +240,18 @@ public class MovieDao {
         }
         return list;
     }
+
+    public static void incrementMovieViewCount(int movieId) {
+        if (movieId <= 0) return;
+        String sql = "UPDATE movies SET view_count = view_count + 1 WHERE id = ? OR tmdb_id = ?";
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setInt(1, movieId);
+                    ps.setInt(2, movieId);
+                    ps.executeUpdate();
+                }
+            }
+        } catch (Exception ignored) {}
+    }
 }

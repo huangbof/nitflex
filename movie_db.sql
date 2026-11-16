@@ -572,3 +572,19 @@ INSERT INTO vip_packages (name, code, price, duration_days, description, is_acti
 ('VIP 6 Tháng', 'VIP_6M', 299000, 180, 'Tiết kiệm 15% • Thưởng thức phim 4K không quảng cáo 6 tháng', 1),
 ('VIP Năm Hoàng Gia', 'VIP_1Y', 499000, 365, 'Đặc quyền tối thượng • Phim bom tấn > 8.0 & Âm thanh vòm Dolby', 1)
 ON DUPLICATE KEY UPDATE name=VALUES(name), price=VALUES(price);
+
+-- Khởi tạo số lượt xem mẫu thực tế cho bảng Thống kê Top 5 Admin Dashboard
+UPDATE movies SET view_count = CASE 
+    WHEN tmdb_id = 299536 THEN 15420
+    WHEN tmdb_id = 299534 THEN 14850
+    WHEN tmdb_id = 19995  THEN 12300
+    WHEN tmdb_id = 76600  THEN 11650
+    WHEN tmdb_id = 157336 THEN 9820
+    WHEN tmdb_id = 27205  THEN 8740
+    WHEN tmdb_id = 550    THEN 7600
+    WHEN tmdb_id = 238    THEN 7200
+    WHEN tmdb_id = 372058 THEN 6950
+    WHEN tmdb_id = 129    THEN 6400
+    ELSE (3200 + (id * 179) % 3600)
+END
+WHERE view_count = 0;
