@@ -17,12 +17,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-/**
- * Tiện ích chuẩn hóa video (Defragment MP4 & Detect Duration):
- * Chuyển đổi các file MP4 phân mảnh (fMP4) thành MP4 tiêu chuẩn có đầy đủ bảng mẫu (stbl, stss)
- * Giúp Android MediaPlayer / VideoView có thể tua (seek) đến bất kỳ giây nào và đọc đúng 100% thời lượng thực tế,
- * khắc phục triệt để lỗi video bị cắt cụt về 1:00 (60 giây) hoặc mất tiếng.
- */
 public class VideoRemuxer {
     private static final String TAG = "VideoRemuxer";
 
@@ -30,9 +24,6 @@ public class VideoRemuxer {
         void onReady(Uri uri, int durationMs);
     }
 
-    /**
-     * Xóa các file cache cũ trong bộ nhớ tạm để giải phóng dung lượng và tránh file lỗi cũ
-     */
     public static void clearCache(Context context) {
         try {
             File cacheDir = context.getCacheDir();
@@ -49,9 +40,6 @@ public class VideoRemuxer {
         }
     }
 
-    /**
-     * Kiểm tra xem file MP4 có phải dạng phân mảnh (fMP4 chứa box 'moof') hay không
-     */
     public static boolean isFragmentedMp4(Context context, Uri uri, int rawResId) {
         AssetFileDescriptor afd = null;
         InputStream is = null;
@@ -88,11 +76,8 @@ public class VideoRemuxer {
         return false;
     }
 
-    /**
-     * Đọc chính xác thời lượng (tính bằng mili-giây) của mọi file MP4, kể cả file phân mảnh fMP4
-     */
     public static int detectMediaDurationMs(Context context, Uri uri, int rawResId) {
-        // 1. Thử lấy bằng MediaMetadataRetriever
+
         try {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             if (rawResId != 0) {
@@ -112,7 +97,6 @@ public class VideoRemuxer {
             }
         } catch (Exception ignored) {}
 
-        // 2. Nếu là fMP4 (MediaMetadataRetriever trả về 0), đọc từ box tfdt của file MP4
         AssetFileDescriptor afd = null;
         FileInputStream fis = null;
         try {
@@ -139,7 +123,6 @@ public class VideoRemuxer {
                     totalRead += r;
                 }
 
-                // Tìm timescale trong box mdhd
                 long timescale = 1000;
                 int mdhdIdx = indexOf(data, totalRead, new byte[]{'m', 'd', 'h', 'd'}, 0);
                 if (mdhdIdx != -1 && mdhdIdx + 28 <= totalRead) {
@@ -151,7 +134,6 @@ public class VideoRemuxer {
                     }
                 }
 
-                // Tìm max baseMediaDecodeTime trong các box tfdt
                 long maxTfdt = 0;
                 int pos = 0;
                 byte[] tfdtTag = new byte[]{'t', 'f', 'd', 't'};
@@ -225,13 +207,12 @@ public class VideoRemuxer {
             File tempFile = null;
 
             try {
-                // Đặt tên file cache chuẩn hóa v2
-                String cacheFileName = (rawResId != 0 
-                        ? "standard_v2_raw_" + rawResId 
+
+                String cacheFileName = (rawResId != 0
+                        ? "standard_v2_raw_" + rawResId
                         : "standard_v2_url_" + Math.abs(sourceUri.toString().hashCode())) + ".mp4";
                 File cacheFile = new File(context.getCacheDir(), cacheFileName);
 
-                // Nếu file chuẩn hóa đã tồn tại trong cache và dung lượng hợp lệ (> 500KB)
                 if (cacheFile.exists() && cacheFile.length() > 500000) {
                     int cachedDurationMs = detectMediaDurationMs(context, Uri.fromFile(cacheFile), 0);
                     mainHandler.post(() -> callback.onReady(Uri.fromFile(cacheFile), cachedDurationMs));
@@ -336,7 +317,6 @@ public class VideoRemuxer {
                         long sampleTime = extractor.getSampleTime();
                         if (sampleTime < 0) sampleTime = 0;
 
-                        // Bảo đảm thời gian timestamp luôn tăng đơn điệu theo từng track để tránh lỗi MediaMuxer
                         if (lastTrackTimeUs[trackIndex] >= 0 && sampleTime <= lastTrackTimeUs[trackIndex]) {
                             sampleTime = lastTrackTimeUs[trackIndex] + 500;
                         }
@@ -369,7 +349,6 @@ public class VideoRemuxer {
                 muxer = null;
                 extractor = null;
 
-                // Nếu nguồn có tiếng nhưng không ghi được gói tin âm thanh nào thì từ chối cache để không bị mất tiếng
                 if (hasAudio && audioSampleCount == 0) {
                     Log.w(TAG, "Không ghi nhận được sample âm thanh, hủy bỏ cache và fallback về nguồn gốc.");
                     if (tempFile != null && tempFile.exists()) tempFile.delete();

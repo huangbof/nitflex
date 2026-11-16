@@ -5,10 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
-/**
- * Singleton JDBC connection helper.
- * Reads connection settings from db.properties on the classpath.
- */
 public class DBConnection {
 
     private static DBConnection instance;
@@ -41,10 +37,6 @@ public class DBConnection {
         }
     }
 
-    /**
-     * Returns the singleton DBConnection instance, re-creating it if the
-     * underlying connection has been closed.
-     */
     public static synchronized DBConnection getInstance() {
         try {
             if (instance == null || instance.connection == null || instance.connection.isClosed()) {

@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng movie_casts trong CSDL MySQL
- */
 public class CastDao {
 
     public static List<Cast> getMovieCasts(int movieId) throws SQLException {

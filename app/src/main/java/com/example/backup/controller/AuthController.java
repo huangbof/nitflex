@@ -9,10 +9,6 @@ import com.example.backup.model.User;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Controller xử lý luồng xác thực tài khoản & phân quyền người dùng
- * Tuân thủ DAO Pattern: ủy nhiệm toàn bộ thao tác CSDL cho UserDao
- */
 public class AuthController {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
@@ -28,9 +24,6 @@ public class AuthController {
         void onError(String message);
     }
 
-    /**
-     * Đăng nhập bằng Tên đăng nhập HOẶC Email kèm mật khẩu
-     */
     public static void login(String usernameOrEmail, String password, AuthCallback callback) {
         executor.execute(() -> {
             try {
@@ -46,9 +39,6 @@ public class AuthController {
         });
     }
 
-    /**
-     * Đăng nhập hoặc tạo mới tài khoản liên kết Google (theo Buổi 10)
-     */
     public static void loginOrRegisterGoogleUser(String email, String displayName, AuthCallback callback) {
         executor.execute(() -> {
             try {
@@ -59,26 +49,22 @@ public class AuthController {
                     mainHandler.post(() -> callback.onError("Không thể đồng bộ tài khoản Google vào CSDL!"));
                 }
             } catch (Exception e) {
-                // Fallback offline nếu có lỗi kết nối
+
                 mainHandler.post(() -> callback.onSuccess(9999, displayName != null ? displayName : "Google User"));
             }
         });
     }
 
-    /**
-     * Đăng ký tài khoản thành viên mới với kiểm tra trùng lặp chi tiết
-     */
     public static void register(String username, String password, String email, AuthCallback callback) {
         executor.execute(() -> {
             try {
-                // 1. Kiểm tra trùng lặp
+
                 String duplicateMsg = UserDao.checkDuplicate(username, email);
                 if (duplicateMsg != null) {
                     mainHandler.post(() -> callback.onError(duplicateMsg));
                     return;
                 }
 
-                // 2. Thêm mới tài khoản
                 int newId = UserDao.register(username, password, email);
                 if (newId > 0) {
                     mainHandler.post(() -> callback.onSuccess(newId, username));
@@ -91,9 +77,6 @@ public class AuthController {
         });
     }
 
-    /**
-     * Kiểm tra trạng thái VIP của thành viên
-     */
     public static void checkVipStatus(int userId, VipCallback callback) {
         executor.execute(() -> {
             boolean isVip = UserDao.checkVipStatus(userId);
@@ -101,9 +84,6 @@ public class AuthController {
         });
     }
 
-    /**
-     * Kích hoạt nâng cấp tài khoản VIP
-     */
     public static void upgradeToVip(int userId, MovieController.SimpleCallback callback) {
         executor.execute(() -> {
             boolean success = UserDao.upgradeToVip(userId);

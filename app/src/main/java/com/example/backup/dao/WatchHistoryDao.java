@@ -11,9 +11,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng watch_history trong CSDL MySQL
- */
 public class WatchHistoryDao {
 
     public static void saveWatchProgress(int userId, int movieId, int progressSeconds, int durationSeconds) {

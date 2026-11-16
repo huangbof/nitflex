@@ -40,21 +40,18 @@ public class SearchActivity extends AppCompatActivity {
     private ProgressBar loading;
     private View searchHeader;
 
-    // Active Filter Banner
     private View layoutActiveFilterBanner;
     private TextView tvActiveFilterDesc;
     private TextView btnClearFilterBanner;
 
-    // Filter & Sort Views on Top bar
     private TextView chipSortPopular, chipSortRating, chipSortLatest;
     private TextView chipGenreAll, chipGenreAction, chipGenreAnime, chipGenreSciFi, chipGenreCrime, chipGenreDrama;
 
-    // Trạng thái bộ lọc đa tiêu chí
-    private String currentSort = "popularity"; // "popularity", "rating", "views", "latest"
-    private int selectedGenreId = 0;           // 0: Tất cả, 28: Hành động, 16: Anime, 878: Viễn tưởng, 80: Tội phạm, 18: Tâm lý
-    private String currentVipFilter = "all";   // "all", "free", "vip"
-    private String currentYearFilter = "all";  // "all", "2020s", "2010s", "classic"
-    private double currentMinRating = 0.0;     // 0.0, 7.0, 8.0
+    private String currentSort = "popularity";
+    private int selectedGenreId = 0;
+    private String currentVipFilter = "all";
+    private String currentYearFilter = "all";
+    private double currentMinRating = 0.0;
 
     private MovieAdapter movieAdapter;
     private final List<Movie> resultsList = new ArrayList<>();
@@ -89,7 +86,6 @@ public class SearchActivity extends AppCompatActivity {
             return false;
         });
 
-        // Tự động tải danh sách phim gợi ý phổ biến ngay khi mở trang Tìm kiếm
         performSearch();
     }
 
@@ -129,7 +125,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setupFilterChips() {
-        // Nhóm sắp xếp
+
         chipSortPopular.setOnClickListener(v -> {
             currentSort = "popularity";
             updateSortChipsUI();
@@ -148,7 +144,6 @@ public class SearchActivity extends AppCompatActivity {
             performSearch();
         });
 
-        // Nhóm thể loại
         chipGenreAll.setOnClickListener(v -> selectGenre(0));
         chipGenreAction.setOnClickListener(v -> selectGenre(28));
         chipGenreAnime.setOnClickListener(v -> selectGenre(16));
@@ -195,21 +190,16 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    // =========================================================================
-    // HƯỚNG 5: BỘ LỌC ĐA TIÊU CHÍ (BOTTOM SHEET)
-    // =========================================================================
     private void showFilterBottomSheet() {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View sheetView = getLayoutInflater().inflate(R.layout.layout_filter_bottom_sheet, null);
         dialog.setContentView(sheetView);
 
-        // State tạm thời trong BottomSheet
         final String[] tempVip = {currentVipFilter};
         final String[] tempYear = {currentYearFilter};
         final String[] tempSort = {currentSort};
         final double[] tempMinRating = {currentMinRating};
 
-        // 1. Phân loại VIP
         TextView chipVipAll = sheetView.findViewById(R.id.chipFilterVipAll);
         TextView chipVipFree = sheetView.findViewById(R.id.chipFilterVipFree);
         TextView chipVipOnly = sheetView.findViewById(R.id.chipFilterVipOnly);
@@ -224,7 +214,6 @@ public class SearchActivity extends AppCompatActivity {
         chipVipOnly.setOnClickListener(v -> { tempVip[0] = "vip"; updateVipUI.run(); });
         updateVipUI.run();
 
-        // 2. Năm phát hành
         TextView chipYearAll = sheetView.findViewById(R.id.chipFilterYearAll);
         TextView chipYear2020 = sheetView.findViewById(R.id.chipFilterYear2020);
         TextView chipYear2010 = sheetView.findViewById(R.id.chipFilterYear2010);
@@ -242,7 +231,6 @@ public class SearchActivity extends AppCompatActivity {
         chipYearClassic.setOnClickListener(v -> { tempYear[0] = "classic"; updateYearUI.run(); });
         updateYearUI.run();
 
-        // 3. Sắp xếp
         TextView chipSortPop = sheetView.findViewById(R.id.chipFilterSortPop);
         TextView chipSortRat = sheetView.findViewById(R.id.chipFilterSortRating);
         TextView chipSortViews = sheetView.findViewById(R.id.chipFilterSortViews);
@@ -260,7 +248,6 @@ public class SearchActivity extends AppCompatActivity {
         chipSortLat.setOnClickListener(v -> { tempSort[0] = "latest"; updateSortUI.run(); });
         updateSortUI.run();
 
-        // 4. Điểm tối thiểu
         TextView chipRatAll = sheetView.findViewById(R.id.chipFilterRatingAll);
         TextView chipRat7 = sheetView.findViewById(R.id.chipFilterRating7);
         TextView chipRat8 = sheetView.findViewById(R.id.chipFilterRating8);
@@ -275,11 +262,9 @@ public class SearchActivity extends AppCompatActivity {
         chipRat8.setOnClickListener(v -> { tempMinRating[0] = 8.0; updateMinRatingUI.run(); });
         updateMinRatingUI.run();
 
-        // Nút đóng
         View btnClose = sheetView.findViewById(R.id.btnFilterClose);
         if (btnClose != null) btnClose.setOnClickListener(v -> dialog.dismiss());
 
-        // Nút đặt lại
         Button btnReset = sheetView.findViewById(R.id.btnFilterReset);
         btnReset.setOnClickListener(v -> {
             tempVip[0] = "all";
@@ -292,7 +277,6 @@ public class SearchActivity extends AppCompatActivity {
             updateMinRatingUI.run();
         });
 
-        // Nút áp dụng
         Button btnApply = sheetView.findViewById(R.id.btnFilterApply);
         btnApply.setOnClickListener(v -> {
             currentVipFilter = tempVip[0];
@@ -356,7 +340,6 @@ public class SearchActivity extends AppCompatActivity {
         loading.setVisibility(View.VISIBLE);
         layoutEmpty.setVisibility(View.GONE);
 
-        // Gọi tìm kiếm Đa Tiêu Chí kết hợp Từ khóa + Thể loại + Thứ tự sắp xếp + VIP/Free + Năm + Điểm tối thiểu
         MovieController.searchMoviesMultiFilter(query, selectedGenreId, currentSort, currentVipFilter, currentYearFilter, currentMinRating, new MovieController.MovieListCallback() {
             @Override
             public void onSuccess(List<Movie> movies) {
@@ -378,7 +361,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 loading.setVisibility(View.GONE);
-                // Fallback nạp danh sách mặc định nếu MySQL không có kết nối
+
                 MovieController.getAllMovies(new MovieController.MovieListCallback() {
                     @Override
                     public void onSuccess(List<Movie> all) {

@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng favorites trong CSDL MySQL
- */
 public class FavoriteDao {
 
     public static List<Movie> getFavorites(int userId) throws SQLException {

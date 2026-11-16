@@ -111,15 +111,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        // Bấm vào thẻ Yêu thích -> Chuyển sang FavoritesActivity
         cardOpenFavorites.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, FavoritesActivity.class)));
 
         btnLogout.setOnClickListener(v -> showLogoutDialog());
 
-        // Nút xóa lịch sử xem
         btnClearHistory.setOnClickListener(v -> showClearHistoryDialog());
 
-        // Setup RecyclerView Lịch sử xem (lưới 2 cột)
         rvWatchHistory.setLayoutManager(new GridLayoutManager(this, 2));
         historyAdapter = new MovieAdapter(this, historyList, movie -> {
             Intent intent = new Intent(ProfileActivity.this, MovieDetailActivity.class);
@@ -200,7 +197,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    // Lấy số lượng phim yêu thích để hiển thị thống kê
     private void loadFavoriteCount() {
         MovieController.getFavorites(session.getUserId(), new MovieController.MovieListCallback() {
             @Override
@@ -216,7 +212,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    // Lấy danh sách lịch sử xem phim
     private void loadWatchHistory() {
         loading.setVisibility(View.VISIBLE);
         layoutEmptyHistory.setVisibility(View.GONE);
@@ -232,14 +227,14 @@ public class ProfileActivity extends AppCompatActivity {
                     tvStatHistoryCount.setText(String.valueOf(movies.size()));
                     historyAdapter.notifyDataSetChanged();
                 } else {
-                    // Nếu MySQL chưa có, thử tải từ bộ nhớ đệm cục bộ (Local Cache)
+
                     loadLocalHistoryFallback();
                 }
             }
 
             @Override
             public void onError(String error) {
-                // Khi MySQL không phản hồi, dùng Local Cache để đảm bảo vẫn xem được lịch sử
+
                 loadLocalHistoryFallback();
             }
         });
@@ -262,7 +257,7 @@ public class ProfileActivity extends AppCompatActivity {
                 loading.setVisibility(View.GONE);
                 historyList.clear();
                 if (allMovies != null) {
-                    // Sắp xếp phim theo đúng thứ tự vừa xem gần đây nhất
+
                     for (int id : watchedIds) {
                         for (Movie m : allMovies) {
                             if (m.getId() == id || m.getTmdbId() == id) {
@@ -300,10 +295,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .setTitle("Xóa lịch sử xem")
                 .setMessage("Bạn có chắc muốn xóa toàn bộ lịch sử các phim đã xem?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
-                    // 1. Xóa trên bộ nhớ cục bộ
+
                     session.clearLocalWatchHistory();
 
-                    // 2. Xóa trên MySQL database
                     MovieController.clearWatchHistory(session.getUserId(), new MovieController.SimpleCallback() {
                         @Override
                         public void onSuccess(String message) {
@@ -313,7 +307,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(String error) {
-                            // Dù MySQL lỗi vẫn cập nhật lại giao diện đã xóa thành công trên máy
+
                             Toast.makeText(ProfileActivity.this, "Đã xóa lịch sử xem phim!", Toast.LENGTH_SHORT).show();
                             loadWatchHistory();
                         }
@@ -328,7 +322,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .setTitle("Đăng xuất")
                 .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi Nit Flex?")
                 .setPositiveButton("Đăng xuất", (dialog, which) -> {
-                    // Đăng xuất Google theo tài liệu Buổi 10
+
                     try {
                         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                 .requestEmail()

@@ -7,9 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng movie_ratings trong CSDL MySQL
- */
 public class MovieRatingDao {
 
     public static boolean submitMovieRating(int userId, int movieId, float rating) throws SQLException {
@@ -39,7 +36,6 @@ public class MovieRatingDao {
                 int validUserId = UserDao.resolveValidUserId(conn, userId);
                 int realMovieId = MovieDao.resolveInternalMovieId(conn, movieId);
 
-                // 1. Điểm của user nếu đã đăng nhập
                 if (validUserId > 0) {
                     String userSql = "SELECT rating FROM movie_ratings WHERE user_id = ? AND movie_id = ?";
                     try (PreparedStatement ps = conn.prepareStatement(userSql)) {
@@ -51,7 +47,6 @@ public class MovieRatingDao {
                     }
                 }
 
-                // 2. Điểm trung bình và tổng lượt vote
                 String avgSql = "SELECT AVG(rating) as avg_rating, COUNT(id) as total_votes FROM movie_ratings WHERE movie_id = ?";
                 try (PreparedStatement ps = conn.prepareStatement(avgSql)) {
                     ps.setInt(1, realMovieId);

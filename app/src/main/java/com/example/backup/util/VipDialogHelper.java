@@ -60,7 +60,6 @@ public class VipDialogHelper {
             upgradeDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
-        // View References
         TextView tvMovieNotice = dialogView.findViewById(R.id.tvVipMovieNotice);
         View btnClose = dialogView.findViewById(R.id.btnVipClose);
 
@@ -92,13 +91,11 @@ public class VipDialogHelper {
             tvMovieNotice.setVisibility(View.GONE);
         }
 
-        // Default local packages
         final List<VipPackage> packages = new ArrayList<>();
         packages.add(new VipPackage(1, "VIP 1 Tháng", "VIP_1M", 59000, 30, "Mở khóa toàn bộ phim 30 ngày", true));
         packages.add(new VipPackage(2, "VIP 6 Tháng", "VIP_6M", 299000, 180, "Tiết kiệm 15% • Xem phim 6 tháng", true));
         packages.add(new VipPackage(3, "VIP 1 Năm Hoàng Gia", "VIP_1Y", 499000, 365, "Đặc quyền tối thượng 365 ngày", true));
 
-        // Selected package index (0: 1 month, 1: 6 months, 2: 1 year)
         final int[] selectedIdx = {0};
 
         Runnable updateSelectionUI = () -> {
@@ -114,7 +111,6 @@ public class VipDialogHelper {
             btnProceed.setText(String.format(Locale.US, "👑 TIẾP TỤC THANH TOÁN • %s", formatVnd(chosen.getPrice())));
         };
 
-        // Try loading real packages from MySQL
         AdminController.getVipPackages(new AdminController.VipPackageListCallback() {
             @Override
             public void onSuccess(List<VipPackage> fetched) {
@@ -141,7 +137,7 @@ public class VipDialogHelper {
 
             @Override
             public void onError(String error) {
-                // Keep default packages
+
             }
         });
 
@@ -191,7 +187,6 @@ public class VipDialogHelper {
         View btnCancel = dialogView.findViewById(R.id.btnCancelPayment);
         View btnClose = dialogView.findViewById(R.id.btnQrClose);
 
-        // Populate Transaction Details
         int userId = session.getUserId() > 0 ? session.getUserId() : 1;
         String transferContent = String.format(Locale.US, "NITFLEX %d %s", userId, pkg.getCode());
         String formattedPrice = formatVnd(pkg.getPrice());
@@ -203,18 +198,17 @@ public class VipDialogHelper {
         tvAmount.setText(formattedPrice);
         tvContent.setText(transferContent);
 
-        // Generate QR URL
         String qrUrl;
         try {
             long priceInt = (long) pkg.getPrice();
             String encodedContent = URLEncoder.encode(transferContent, "UTF-8");
             if (isVietQr) {
-                // VietQR Official API (MB Bank 0335968888)
+
                 qrUrl = String.format(Locale.US,
                         "https://img.vietqr.io/image/MB-0335968888-compact2.png?amount=%d&addInfo=%s&accountName=NIT%%20FLEX%%20ENTERTAINMENT",
                         priceInt, encodedContent);
             } else {
-                // MoMo QR Code format
+
                 qrUrl = String.format(Locale.US,
                         "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=2|99|0335968888|NIT%%20FLEX%%20ENTERTAINMENT||0|0|%d|%s|transfer_p2p",
                         priceInt, encodedContent);
@@ -223,7 +217,6 @@ public class VipDialogHelper {
             qrUrl = "https://img.vietqr.io/image/MB-0335968888-compact2.png?amount=" + (long) pkg.getPrice();
         }
 
-        // Load QR Code using Glide
         pbLoading.setVisibility(View.VISIBLE);
         Glide.with(activity)
                 .load(qrUrl)
@@ -242,11 +235,9 @@ public class VipDialogHelper {
                 })
                 .into(imgQr);
 
-        // Copy actions
         btnCopyAcc.setOnClickListener(v -> copyToClipboard(activity, "Số tài khoản", "0335968888"));
         btnCopyContent.setOnClickListener(v -> copyToClipboard(activity, "Nội dung chuyển khoản", transferContent));
 
-        // 15-Minute Countdown Timer
         if (currentTimer != null) currentTimer.cancel();
         currentTimer = new CountDownTimer(15 * 60 * 1000, 1000) {
             @Override
@@ -263,13 +254,11 @@ public class VipDialogHelper {
             }
         }.start();
 
-        // Confirm Button (Simulate Bank Callback & Activate in MySQL)
         btnConfirm.setOnClickListener(v -> {
             if (currentTimer != null) currentTimer.cancel();
             btnConfirm.setEnabled(false);
             btnConfirm.setText("Đang xác thực giao dịch...");
 
-            // Activate VIP in MySQL users table
             AuthController.upgradeToVip(userId, new MovieController.SimpleCallback() {
                 @Override
                 public void onSuccess(String message) {
@@ -281,7 +270,7 @@ public class VipDialogHelper {
 
                 @Override
                 public void onError(String error) {
-                    // Fallback local activation
+
                     session.setVip(true);
                     Toast.makeText(activity, "🎉 Chúc mừng bạn đã nâng cấp thành công gói Nit Flex VIP!", Toast.LENGTH_LONG).show();
                     qrDialog.dismiss();

@@ -60,9 +60,6 @@ public class SessionManager {
         return pref.getBoolean(KEY_IS_ADMIN, false) || "admin".equalsIgnoreCase(getUsername());
     }
 
-    // ==========================================
-    // LƯU LỊCH SỬ XEM PHIM CỤC BỘ (Offline Cache)
-    // ==========================================
     public void addWatchedMovie(int movieId) {
         if (movieId <= 0) return;
         String history = pref.getString(KEY_WATCH_HISTORY, "");
@@ -76,10 +73,9 @@ public class SessionManager {
                 }
             }
         }
-        // Luôn đưa phim vừa xem lên vị trí đầu tiên
+
         list.add(0, String.valueOf(movieId));
 
-        // Giới hạn tối đa 30 phim gần nhất
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < Math.min(list.size(), 30); i++) {
             if (i > 0) sb.append(",");
@@ -145,9 +141,6 @@ public class SessionManager {
         editor.remove(KEY_WATCH_HISTORY).apply();
     }
 
-    // ==========================================
-    // LƯU PHIM YÊU THÍCH CỤC BỘ (Offline Cache)
-    // ==========================================
     private static final String KEY_FAVORITES = "local_favorites";
 
     public void addLocalFavorite(int movieId) {
@@ -192,9 +185,6 @@ public class SessionManager {
         editor.putString(KEY_FAVORITES, sb.toString()).apply();
     }
 
-    // ==========================================
-    // LƯU ĐÁNH GIÁ PHIM CỤC BỘ (Offline Cache)
-    // ==========================================
     public void saveLocalRating(int movieId, float rating) {
         editor.putFloat("rating_movie_" + movieId, rating).apply();
     }
@@ -203,9 +193,6 @@ public class SessionManager {
         return pref.getFloat("rating_movie_" + movieId, 0f);
     }
 
-    // ==========================================
-    // LƯU BÌNH LUẬN PHIM CỤC BỘ (Offline Cache)
-    // ==========================================
     public void addLocalComment(int movieId, String username, String content) {
         String key = "local_comments_" + movieId;
         String existing = pref.getString(key, "");

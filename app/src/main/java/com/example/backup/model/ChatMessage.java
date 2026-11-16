@@ -7,7 +7,7 @@ public class ChatMessage implements Serializable {
     private String text;
     private boolean isUser;
     private String time;
-    private Movie suggestedMovie; // Phim gợi ý đi kèm (nếu có)
+    private Movie suggestedMovie;
 
     public ChatMessage(String text, boolean isUser, String time) {
         this.text = text;

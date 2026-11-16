@@ -10,9 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng users và xác thực trong CSDL MySQL
- */
 public class UserDao {
 
     public static String md5(String input) {
@@ -71,7 +68,7 @@ public class UserDao {
                 }
             }
         }
-        return null; // Không trùng
+        return null;
     }
 
     public static int register(String username, String password, String email) throws SQLException {

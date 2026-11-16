@@ -15,10 +15,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Controller xử lý luồng thao tác Quản trị viên (Admin Dashboard)
- * Tuân thủ DAO Pattern: ủy nhiệm toàn bộ truy vấn CSDL cho AdminDao
- */
 public class AdminController {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
@@ -49,7 +45,6 @@ public class AdminController {
         void onError(String message);
     }
 
-    // 1. Phim (Thêm / Sửa / Xóa)
     public static void addMovie(Movie m, AdminCallback callback) {
         executor.execute(() -> {
             try {
@@ -95,7 +90,6 @@ public class AdminController {
         });
     }
 
-    // 2. Quản lý Người Dùng
     public static void getAllUsers(UserListCallback callback) {
         executor.execute(() -> {
             try {
@@ -152,7 +146,6 @@ public class AdminController {
         });
     }
 
-    // 3. Diễn viên
     public static void addCast(Cast c, AdminCallback callback) {
         executor.execute(() -> {
             try {
@@ -183,7 +176,6 @@ public class AdminController {
         });
     }
 
-    // 4. Gói VIP
     public static void getVipPackages(VipPackageListCallback callback) {
         executor.execute(() -> {
             try {
@@ -240,7 +232,6 @@ public class AdminController {
         });
     }
 
-    // 5. Thống Kê Tổng Quan Dashboard
     public static void getDashboardStats(DashboardStatsCallback callback) {
         executor.execute(() -> {
             try {
@@ -252,7 +243,6 @@ public class AdminController {
         });
     }
 
-    // 6. Quản Lý Bình Luận
     public static void getAllComments(CommentListCallback callback) {
         executor.execute(() -> {
             try {

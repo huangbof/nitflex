@@ -35,11 +35,11 @@ public class ChatAiActivity extends AppCompatActivity {
     private EditText etInput;
     private RecyclerView rvChat;
     private View chatHeader, chatInputBar;
-    private View typingIndicator; // hiển thị "AI đang nhập..."
+    private View typingIndicator;
 
     private ChatAdapter chatAdapter;
     private final List<ChatMessage> messageList = new ArrayList<>();
-    private boolean isWaitingReply = false; // tránh gửi kép khi AI đang xử lý
+    private boolean isWaitingReply = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +66,12 @@ public class ChatAiActivity extends AppCompatActivity {
             Toast.makeText(this, "Đã làm mới cuộc hội thoại", Toast.LENGTH_SHORT).show();
         });
 
-        // Setup Chat RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         rvChat.setLayoutManager(layoutManager);
         chatAdapter = new ChatAdapter(this, messageList);
         rvChat.setAdapter(chatAdapter);
 
-        // Tin nhắn chào mừng ban đầu
         addWelcomeMessage();
 
         btnSend.setOnClickListener(v -> sendUserMessage());
@@ -135,19 +133,16 @@ public class ChatAiActivity extends AppCompatActivity {
         scrollToBottom();
         etInput.setText("");
 
-        // Hiện typing indicator
         isWaitingReply = true;
         btnSend.setEnabled(false);
         if (typingIndicator != null) typingIndicator.setVisibility(View.VISIBLE);
 
-        // Gọi AI xử lý
         AiAssistantController.askAi(text, (replyText, suggestedMovie) -> {
-            // Ẩn typing indicator
+
             if (typingIndicator != null) typingIndicator.setVisibility(View.GONE);
             isWaitingReply = false;
             btnSend.setEnabled(true);
 
-            // Controller luôn trả về reply khác null (đã fallback rule-based nếu Gemini lỗi)
             String finalReply = (replyText != null && !replyText.isEmpty())
                     ? replyText : "🤖 Xin lỗi, hãy thử lại nhé!";
 
@@ -167,7 +162,7 @@ public class ChatAiActivity extends AppCompatActivity {
     }
 
     private void setupQuickChips() {
-        // Chips gợi ý nhanh — bấm để tự động gửi câu hỏi
+
         setChipQuery(R.id.chipHot,    "Phim nào đang hot và nhiều người xem nhất?");
         setChipQuery(R.id.chipAction, "Gợi ý phim hành động hay nhất cho mình");
         setChipQuery(R.id.chipAnime,  "Có phim anime hoặc hoạt hình Nhật Bản nào hay không?");

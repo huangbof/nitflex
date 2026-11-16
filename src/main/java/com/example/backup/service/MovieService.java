@@ -11,23 +11,14 @@ public class MovieService {
     private final MovieRepository movieRepo = new MovieRepository();
     private final GenreRepository genreRepo = new GenreRepository();
 
-    // -----------------------------------------------------------------------
-    // getAllMovies
-    // -----------------------------------------------------------------------
     public List<Movie> getAllMovies() {
         return movieRepo.findAll();
     }
 
-    // -----------------------------------------------------------------------
-    // getByGenre
-    // -----------------------------------------------------------------------
     public List<Movie> getByGenre(int genreId) {
         return movieRepo.findByGenre(genreId);
     }
 
-    // -----------------------------------------------------------------------
-    // getDetail — also increments the view counter
-    // -----------------------------------------------------------------------
     public Movie getDetail(int id) {
         Movie movie = movieRepo.findById(id);
         if (movie != null) {
@@ -36,9 +27,6 @@ public class MovieService {
         return movie;
     }
 
-    // -----------------------------------------------------------------------
-    // search
-    // -----------------------------------------------------------------------
     public List<Movie> search(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return movieRepo.findAll();
@@ -46,23 +34,14 @@ public class MovieService {
         return movieRepo.search(keyword.trim());
     }
 
-    // -----------------------------------------------------------------------
-    // getTopRated
-    // -----------------------------------------------------------------------
     public List<Movie> getTopRated() {
         return movieRepo.findTopRated();
     }
 
-    // -----------------------------------------------------------------------
-    // getPopular
-    // -----------------------------------------------------------------------
     public List<Movie> getPopular() {
         return movieRepo.findPopular();
     }
 
-    // -----------------------------------------------------------------------
-    // getLatest
-    // -----------------------------------------------------------------------
     public List<Movie> getLatest() {
         return movieRepo.findLatest();
     }

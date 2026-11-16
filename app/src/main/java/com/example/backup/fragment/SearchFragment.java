@@ -40,21 +40,18 @@ public class SearchFragment extends Fragment {
     private TextView tvEmpty;
     private ProgressBar loading;
 
-    // Active Filter Banner
     private View layoutActiveFilterBanner;
     private TextView tvActiveFilterDesc;
     private TextView btnClearFilterBanner;
 
-    // Filter & Sort Views on Top bar
     private TextView chipSortPopular, chipSortRating, chipSortLatest;
     private TextView chipGenreAll, chipGenreAction, chipGenreAnime, chipGenreSciFi, chipGenreCrime, chipGenreDrama;
 
-    // Trạng thái bộ lọc đa tiêu chí
-    private String currentSort = "popularity"; // "popularity", "rating", "views", "latest"
-    private int selectedGenreId = 0;           // 0: Tất cả, 28: Hành động, 16: Anime, 878: Viễn tưởng, 80: Tội phạm, 18: Tâm lý
-    private String currentVipFilter = "all";   // "all", "free", "vip"
-    private String currentYearFilter = "all";  // "all", "2020s", "2010s", "classic"
-    private double currentMinRating = 0.0;     // 0.0, 7.0, 8.0
+    private String currentSort = "popularity";
+    private int selectedGenreId = 0;
+    private String currentVipFilter = "all";
+    private String currentYearFilter = "all";
+    private double currentMinRating = 0.0;
 
     private MovieAdapter movieAdapter;
     private final List<Movie> resultsList = new ArrayList<>();

@@ -8,7 +8,7 @@ public class User implements Serializable {
     private String email;
     private String avatarUrl;
     private boolean isVip;
-    private String role; // "admin" | "user"
+    private String role;
     private String createdAt;
 
     public User() {}

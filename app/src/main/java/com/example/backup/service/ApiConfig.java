@@ -1,8 +1,7 @@
 package com.example.backup.service;
 
 public class ApiConfig {
-    // 10.0.2.2 là localhost của máy tính khi chạy trên Android Emulator.
-    // Nếu chạy trên điện thoại thật qua WiFi, hãy đổi thành IP máy tính, ví dụ: "http://192.168.1.15:8080/MovieBackend"
+
     public static final String BASE_URL = "http://10.0.2.2:8080/MovieBackend";
 
     public static final String URL_MOVIES = BASE_URL + "/movies";

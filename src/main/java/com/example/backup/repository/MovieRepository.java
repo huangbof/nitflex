@@ -12,9 +12,6 @@ public class MovieRepository {
         return DBConnection.getInstance().getConnection();
     }
 
-    // -----------------------------------------------------------------------
-    // Helper: map a ResultSet row to a Movie object
-    // -----------------------------------------------------------------------
     private Movie mapRow(ResultSet rs) throws SQLException {
         Movie m = new Movie();
         m.setId(rs.getInt("id"));
@@ -34,9 +31,6 @@ public class MovieRepository {
         return m;
     }
 
-    // -----------------------------------------------------------------------
-    // findAll — ordered by popularity DESC
-    // -----------------------------------------------------------------------
     public List<Movie> findAll() {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT * FROM movies ORDER BY popularity DESC";
@@ -49,9 +43,6 @@ public class MovieRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // findByGenre
-    // -----------------------------------------------------------------------
     public List<Movie> findByGenre(int genreId) {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT * FROM movies WHERE genre_id = ? ORDER BY popularity DESC";
@@ -66,9 +57,6 @@ public class MovieRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // findById
-    // -----------------------------------------------------------------------
     public Movie findById(int id) {
         String sql = "SELECT * FROM movies WHERE id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -82,9 +70,6 @@ public class MovieRepository {
         return null;
     }
 
-    // -----------------------------------------------------------------------
-    // search — LIKE %keyword%
-    // -----------------------------------------------------------------------
     public List<Movie> search(String keyword) {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT * FROM movies WHERE title LIKE ? ORDER BY popularity DESC";
@@ -99,9 +84,6 @@ public class MovieRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // findTopRated
-    // -----------------------------------------------------------------------
     public List<Movie> findTopRated() {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT * FROM movies ORDER BY vote_average DESC LIMIT 20";
@@ -114,9 +96,6 @@ public class MovieRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // findPopular
-    // -----------------------------------------------------------------------
     public List<Movie> findPopular() {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT * FROM movies ORDER BY popularity DESC LIMIT 20";
@@ -129,9 +108,6 @@ public class MovieRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // findLatest
-    // -----------------------------------------------------------------------
     public List<Movie> findLatest() {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT * FROM movies ORDER BY release_date DESC LIMIT 20";
@@ -144,9 +120,6 @@ public class MovieRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // incrementViewCount
-    // -----------------------------------------------------------------------
     public void incrementViewCount(int movieId) {
         String sql = "UPDATE movies SET view_count = view_count + 1 WHERE id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {

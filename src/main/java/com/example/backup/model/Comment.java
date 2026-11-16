@@ -8,7 +8,7 @@ public class Comment {
     private int movieId;
     private String content;
     private Timestamp createdAt;
-    // Populated via JOIN with users table
+
     private String username;
 
     public Comment() {}

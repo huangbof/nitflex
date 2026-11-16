@@ -46,7 +46,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.tvContent.setText(comment.getContent());
         holder.tvTime.setText(comment.getCreatedAt() != null ? comment.getCreatedAt() : "");
 
-        // Set initial letter
         String initial = uName.substring(0, 1).toUpperCase();
         holder.tvAvatarInitial.setText(initial);
     }

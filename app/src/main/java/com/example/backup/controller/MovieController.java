@@ -21,16 +21,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Controller điều phối luồng dữ liệu & tương tác người dùng của phân hệ Phim
- * Tuân thủ DAO Pattern: ủy nhiệm toàn bộ truy vấn CSDL cho các lớp DAO chuyên trách
- */
 public class MovieController {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    // Các giao diện Callback trả kết quả về UI Thread
     public interface MovieListCallback {
         void onSuccess(List<Movie> movies);
         void onError(String error);
@@ -69,7 +64,6 @@ public class MovieController {
         void onError(String error);
     }
 
-    // Helper backward compatibility
     public static int resolveInternalMovieId(Connection conn, int movieId) {
         return MovieDao.resolveInternalMovieId(conn, movieId);
     }
@@ -78,7 +72,6 @@ public class MovieController {
         return UserDao.resolveValidUserId(conn, userId);
     }
 
-    // 1. Lấy danh sách phim theo type: top_rated, popular, latest, all
     public static void getMovies(String type, MovieListCallback callback) {
         executor.execute(() -> {
             try {
@@ -90,12 +83,10 @@ public class MovieController {
         });
     }
 
-    // 2. Lấy tất cả phim
     public static void getAllMovies(MovieListCallback callback) {
         getMovies("all", callback);
     }
 
-    // 3. Lấy phim theo thể loại
     public static void getMoviesByGenre(int genreId, MovieListCallback callback) {
         executor.execute(() -> {
             try {
@@ -107,7 +98,6 @@ public class MovieController {
         });
     }
 
-    // 4. Lấy chi tiết một phim
     public static void getMovieDetail(int id, MovieDetailCallback callback) {
         executor.execute(() -> {
             try {
@@ -123,12 +113,10 @@ public class MovieController {
         });
     }
 
-    // 4a. Tìm kiếm phim cơ bản
     public static void searchMovies(String keyword, MovieListCallback callback) {
         searchMoviesAdvanced(keyword, 0, "popularity", callback);
     }
 
-    // 4b. Tìm kiếm phim kết hợp Lọc thể loại & Sắp xếp nâng cao
     public static void searchMoviesAdvanced(String keyword, int genreId, String sortType, MovieListCallback callback) {
         executor.execute(() -> {
             try {
@@ -140,7 +128,6 @@ public class MovieController {
         });
     }
 
-    // 4c. Tìm kiếm phim Đa Tiêu Chí
     public static void searchMoviesMultiFilter(String keyword, int genreId, String sortType,
                                               String vipFilter, String yearFilter, double minRating,
                                               MovieListCallback callback) {
@@ -154,7 +141,6 @@ public class MovieController {
         });
     }
 
-    // 5. Lấy danh sách thể loại
     public static void getGenres(GenreListCallback callback) {
         executor.execute(() -> {
             try {
@@ -166,7 +152,6 @@ public class MovieController {
         });
     }
 
-    // 6. Lấy danh sách phim yêu thích
     public static void getFavorites(int userId, MovieListCallback callback) {
         executor.execute(() -> {
             try {
@@ -178,7 +163,6 @@ public class MovieController {
         });
     }
 
-    // 7. Toggle yêu thích
     public static void toggleFavorite(int userId, int movieId, SimpleCallback callback) {
         executor.execute(() -> {
             try {
@@ -190,7 +174,6 @@ public class MovieController {
         });
     }
 
-    // 8. Lấy bình luận của 1 phim
     public static void getComments(int movieId, CommentListCallback callback) {
         executor.execute(() -> {
             try {
@@ -202,7 +185,6 @@ public class MovieController {
         });
     }
 
-    // 9. Thêm bình luận
     public static void addComment(int userId, int movieId, String content, SimpleCallback callback) {
         executor.execute(() -> {
             try {
@@ -218,7 +200,6 @@ public class MovieController {
         });
     }
 
-    // 9b. Gửi đánh giá sao của người dùng
     public static void submitMovieRating(int userId, int movieId, float rating, SimpleCallback callback) {
         executor.execute(() -> {
             try {
@@ -234,7 +215,6 @@ public class MovieController {
         });
     }
 
-    // 9c. Lấy thông tin đánh giá của phim
     public static void getMovieRatingInfo(int userId, int movieId, RatingCallback callback) {
         executor.execute(() -> {
             float[] info = MovieRatingDao.getMovieRatingInfo(userId, movieId);
@@ -245,7 +225,6 @@ public class MovieController {
         });
     }
 
-    // 10. Lưu tiến độ xem
     public static void saveWatchProgress(int userId, int movieId, int progressSeconds) {
         saveWatchProgress(userId, movieId, progressSeconds, 0);
     }
@@ -256,7 +235,6 @@ public class MovieController {
         });
     }
 
-    // 10b. Lấy tiến độ đã xem trước đó
     public static void getWatchProgress(int userId, int movieId, ProgressCallback callback) {
         executor.execute(() -> {
             int progress = WatchHistoryDao.getWatchProgress(userId, movieId);
@@ -264,7 +242,6 @@ public class MovieController {
         });
     }
 
-    // 11. Lấy toàn bộ lịch sử xem phim
     public static void getWatchHistory(int userId, MovieListCallback callback) {
         executor.execute(() -> {
             try {
@@ -276,7 +253,6 @@ public class MovieController {
         });
     }
 
-    // 11b. Lấy danh sách phim Đang Xem Dở (Tiếp tục xem)
     public static void getContinueWatchingMovies(int userId, MovieListCallback callback) {
         executor.execute(() -> {
             try {
@@ -288,7 +264,6 @@ public class MovieController {
         });
     }
 
-    // 12. Xóa 1 phim khỏi lịch sử xem
     public static void deleteWatchHistoryItem(int userId, int movieId, SimpleCallback callback) {
         executor.execute(() -> {
             try {
@@ -300,7 +275,6 @@ public class MovieController {
         });
     }
 
-    // 12b. Xóa toàn bộ lịch sử xem
     public static void clearWatchHistory(int userId, SimpleCallback callback) {
         executor.execute(() -> {
             try {
@@ -312,7 +286,6 @@ public class MovieController {
         });
     }
 
-    // 13. Lấy danh sách diễn viên của phim
     public static void getMovieCasts(int movieId, CastListCallback callback) {
         executor.execute(() -> {
             try {
@@ -324,7 +297,6 @@ public class MovieController {
         });
     }
 
-    // 14. Tự động tăng lượt xem của phim khi người dùng phát video
     public static void incrementMovieViewCount(int movieId) {
         executor.execute(() -> {
             MovieDao.incrementMovieViewCount(movieId);

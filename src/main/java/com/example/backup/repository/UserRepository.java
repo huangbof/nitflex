@@ -10,9 +10,6 @@ public class UserRepository {
         return DBConnection.getInstance().getConnection();
     }
 
-    // -----------------------------------------------------------------------
-    // Helper: map a ResultSet row to a User object
-    // -----------------------------------------------------------------------
     private User mapRow(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getInt("id"));
@@ -24,9 +21,6 @@ public class UserRepository {
         return u;
     }
 
-    // -----------------------------------------------------------------------
-    // findByUsername
-    // -----------------------------------------------------------------------
     public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -40,9 +34,6 @@ public class UserRepository {
         return null;
     }
 
-    // -----------------------------------------------------------------------
-    // findById
-    // -----------------------------------------------------------------------
     public User findById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -56,9 +47,6 @@ public class UserRepository {
         return null;
     }
 
-    // -----------------------------------------------------------------------
-    // existsByUsername
-    // -----------------------------------------------------------------------
     public boolean existsByUsername(String username) {
         String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -72,9 +60,6 @@ public class UserRepository {
         return false;
     }
 
-    // -----------------------------------------------------------------------
-    // existsByEmail
-    // -----------------------------------------------------------------------
     public boolean existsByEmail(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -88,9 +73,6 @@ public class UserRepository {
         return false;
     }
 
-    // -----------------------------------------------------------------------
-    // save — INSERT, return generated id (-1 on failure)
-    // -----------------------------------------------------------------------
     public int save(User user) {
         String sql = "INSERT INTO users (username, password_hash, email, avatar_url, created_at) VALUES (?, ?, ?, ?, NOW())";
         try (PreparedStatement ps = getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -110,9 +92,6 @@ public class UserRepository {
         return -1;
     }
 
-    // -----------------------------------------------------------------------
-    // updateAvatar
-    // -----------------------------------------------------------------------
     public boolean updateAvatar(int userId, String avatarUrl) {
         String sql = "UPDATE users SET avatar_url = ? WHERE id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {

@@ -16,9 +16,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý các thao tác quản trị hệ thống (CRUD) trong CSDL MySQL
- */
 public class AdminDao {
 
     private static String md5(String input) {
@@ -30,7 +27,6 @@ public class AdminDao {
             st.executeUpdate("ALTER TABLE users ADD COLUMN IF NOT EXISTS is_vip TINYINT DEFAULT 0");
             st.executeUpdate("ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) DEFAULT 'user'");
 
-            // Tự động kiểm tra và khởi tạo lượt xem mẫu nếu tất cả phim đang bằng 0 lượt xem
             try (ResultSet rs = st.executeQuery("SELECT SUM(view_count) FROM movies")) {
                 if (rs.next() && rs.getInt(1) == 0) {
                     st.executeUpdate("UPDATE movies SET view_count = CASE "
@@ -298,7 +294,6 @@ public class AdminDao {
             if (conn == null) throw new SQLException("Không thể kết nối CSDL MySQL!");
             ensureVipTable(conn);
 
-            // 1. Thống kê người dùng (Tổng & VIP)
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) as total, SUM(CASE WHEN is_vip = 1 THEN 1 ELSE 0 END) as vips FROM users");
                  ResultSet rs = ps.executeQuery()) {
@@ -308,7 +303,6 @@ public class AdminDao {
                 }
             }
 
-            // 2. Thống kê phim
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) as total, "
                     + "SUM(CASE WHEN vote_average > 8.0 THEN 1 ELSE 0 END) as vips, "
@@ -321,7 +315,6 @@ public class AdminDao {
                 }
             }
 
-            // 3. Thống kê tương tác
             try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM comments");
                  ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) stats.setTotalComments(rs.getInt(1));
@@ -332,7 +325,6 @@ public class AdminDao {
                 if (rs.next()) stats.setTotalRatings(rs.getInt(1));
             } catch (Exception ignored) {}
 
-            // 4. Doanh thu ước tính
             double avgPkgPrice = 179000.0;
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT IFNULL(AVG(price), 179000) FROM vip_packages WHERE is_active = 1");
@@ -344,7 +336,6 @@ public class AdminDao {
             } catch (Exception ignored) {}
             stats.setEstimatedRevenue(stats.getVipUsers() * avgPkgPrice);
 
-            // 5. Top 5 phim có lượt xem cao nhất
             List<Movie> topMovies = new ArrayList<>();
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT id, tmdb_id, title, original_title, overview, poster_path, backdrop_path, "

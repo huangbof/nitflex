@@ -112,7 +112,6 @@ public class FavoritesActivity extends AppCompatActivity {
                     favList.addAll(movies);
                 }
 
-                // Nếu có phim yêu thích trong local cache mà chưa có trong danh sách DB (do vừa thêm lúc offline)
                 if (!localFavIds.isEmpty()) {
                     MovieController.getAllMovies(new MovieController.MovieListCallback() {
                         @Override
@@ -153,7 +152,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-                // Fallback khi offline hoặc lỗi kết nối MySQL: Lấy từ Local Cache
+
                 List<Integer> localFavIds = session.getLocalFavoriteIds();
                 if (!localFavIds.isEmpty()) {
                     MovieController.getAllMovies(new MovieController.MovieListCallback() {

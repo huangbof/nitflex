@@ -20,9 +20,8 @@ public class Movie implements Serializable {
     private int genreId;
     private int viewCount;
 
-    // Tiến độ xem phim (phục vụ tính năng Tiếp Tục Xem & Lịch Sử Xem)
-    private int watchProgress; // Số giây đã xem
-    private int watchDuration; // Tổng thời lượng phim (giây)
+    private int watchProgress;
+    private int watchDuration;
 
     public Movie() {}
 
@@ -80,19 +79,13 @@ public class Movie implements Serializable {
     public int getWatchDuration() { return watchDuration; }
     public void setWatchDuration(int watchDuration) { this.watchDuration = watchDuration; }
 
-    /**
-     * Tính toán phần trăm đã xem (1% - 100%)
-     */
     public int getWatchProgressPercent() {
         if (watchProgress <= 0) return 0;
-        int total = watchDuration > 0 ? watchDuration : 7200; // Mặc định 120 phút nếu chưa có duration
+        int total = watchDuration > 0 ? watchDuration : 7200;
         int percent = (int) Math.round(((double) watchProgress / total) * 100);
         return Math.max(1, Math.min(100, percent));
     }
 
-    /**
-     * Định dạng thời gian đã xem, ví dụ "14:20" hoặc "1h15p"
-     */
     public String getFormattedWatchProgress() {
         if (watchProgress <= 0) return "00:00";
         int hours = watchProgress / 3600;
@@ -105,9 +98,6 @@ public class Movie implements Serializable {
         }
     }
 
-    /**
-     * Số phút còn lại của phim
-     */
     public String getRemainingTimeText() {
         int total = watchDuration > 0 ? watchDuration : 7200;
         int remainingSec = Math.max(0, total - watchProgress);
@@ -118,9 +108,6 @@ public class Movie implements Serializable {
         return "Còn " + remMin + " phút";
     }
 
-    /**
-     * Phân loại phim VIP: Phim đạt điểm số đánh giá TMDB > 8.0
-     */
     public boolean isVip() {
         return voteAverage > 8.0;
     }

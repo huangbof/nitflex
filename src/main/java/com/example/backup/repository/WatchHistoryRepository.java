@@ -12,9 +12,6 @@ public class WatchHistoryRepository {
         return DBConnection.getInstance().getConnection();
     }
 
-    // -----------------------------------------------------------------------
-    // Helper: map movie columns from JOIN result
-    // -----------------------------------------------------------------------
     private Movie mapMovieRow(ResultSet rs) throws SQLException {
         Movie m = new Movie();
         m.setId(rs.getInt("id"));
@@ -34,9 +31,6 @@ public class WatchHistoryRepository {
         return m;
     }
 
-    // -----------------------------------------------------------------------
-    // findByUserId — returns movies from watch history (most recent first)
-    // -----------------------------------------------------------------------
     public List<Movie> findByUserId(int userId) {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT m.* FROM movies m "
@@ -54,11 +48,8 @@ public class WatchHistoryRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // saveOrUpdate — INSERT if not exists, UPDATE progress+watched_at if exists
-    // -----------------------------------------------------------------------
     public boolean saveOrUpdate(int userId, int movieId, int progress) {
-        // Try UPDATE first
+
         String updateSql = "UPDATE watch_history SET progress = ?, watched_at = NOW() "
                          + "WHERE user_id = ? AND movie_id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(updateSql)) {
@@ -72,7 +63,6 @@ public class WatchHistoryRepository {
             return false;
         }
 
-        // No existing row — INSERT
         String insertSql = "INSERT INTO watch_history (user_id, movie_id, watched_at, progress) "
                          + "VALUES (?, ?, NOW(), ?)";
         try (PreparedStatement ps = getConn().prepareStatement(insertSql)) {

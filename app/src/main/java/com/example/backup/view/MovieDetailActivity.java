@@ -124,7 +124,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         View.OnClickListener playListener = v -> {
             if (movie != null) {
-                // Kiểm tra phân loại phim VIP: điểm số TMDB > 7.0
+
                 if (movie.isVip() && !session.isVip()) {
                     VipDialogHelper.showUpgradeDialog(MovieDetailActivity.this, movie, () -> {
                         startPlayback();
@@ -145,7 +145,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
             final int targetMovieId = (movie != null && movie.getId() > 0) ? movie.getId() : movieId;
 
-            // 1. Phản hồi giao diện tức thì (Optimistic UI) & Cập nhật bộ nhớ đệm Offline
             isFav = !isFav;
             if (isFav) {
                 session.addLocalFavorite(targetMovieId);
@@ -162,11 +161,10 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
             updateFavoriteButtonUI();
 
-            // 2. Đồng bộ an toàn lên CSDL MySQL
             MovieController.toggleFavorite(session.getUserId(), targetMovieId, new MovieController.SimpleCallback() {
                 @Override
                 public void onSuccess(String status) {
-                    // CSDL MySQL đã ghi nhận đồng bộ thành công
+
                 }
 
                 @Override
@@ -191,17 +189,15 @@ public class MovieDetailActivity extends AppCompatActivity {
             btnSendComment.setEnabled(false);
             final String userDisplayName = session.getUsername().isEmpty() ? "Khán giả" : session.getUsername();
 
-            // 1. Lưu cục bộ dự phòng (Offline Cache)
             session.addLocalComment(movieId, userDisplayName, content);
 
-            // 2. Gửi lên MySQL database
             MovieController.addComment(session.getUserId(), movieId, content, new MovieController.SimpleCallback() {
                 @Override
                 public void onSuccess(String message) {
                     btnSendComment.setEnabled(true);
                     etComment.setText("");
                     Toast.makeText(MovieDetailActivity.this, "Đã đăng bình luận!", Toast.LENGTH_SHORT).show();
-                    loadComments(); // Tải lại bình luận ngay lập tức
+                    loadComments();
                 }
 
                 @Override
@@ -214,7 +210,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             });
         });
 
-        // Xử lý sự kiện khi người dùng chấm điểm số sao
         ratingBarUser.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
             if (!fromUser || isUpdatingRatingUI) return;
 
@@ -251,7 +246,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void loadRatingInfo() {
         if (movieId <= 0) return;
 
-        // 1. Lấy điểm cá nhân từ local cache
         float localRating = session.getLocalRating(movieId);
         if (localRating > 0) {
             isUpdatingRatingUI = true;
@@ -260,7 +254,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             isUpdatingRatingUI = false;
         }
 
-        // 2. Lấy dữ liệu rating từ MySQL database
         MovieController.getMovieRatingInfo(session.getUserId(), movieId, (userRating, avgRating, totalVotes) -> {
             isUpdatingRatingUI = true;
             if (userRating > 0) {
@@ -296,13 +289,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         final int targetMovieId = (movie != null && movie.getId() > 0) ? movie.getId() : movieId;
         if (targetMovieId <= 0) return;
 
-        // 1. Kiểm tra tức thì từ Local Cache (siêu nhạy, không trễ mạng)
         if (session.isLocalFavorite(targetMovieId) || (movie != null && session.isLocalFavorite(movie.getTmdbId()))) {
             isFav = true;
             updateFavoriteButtonUI();
         }
 
-        // 2. Đồng bộ ngầm với MySQL CSDL
         MovieController.getFavorites(session.getUserId(), new MovieController.MovieListCallback() {
             @Override
             public void onSuccess(List<Movie> movies) {
@@ -420,7 +411,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 if (comments != null) {
                     commentList.addAll(comments);
                 }
-                // Đồng bộ thêm bình luận offline nếu có
+
                 List<Comment> localList = session.getLocalComments(movieId);
                 for (Comment localC : localList) {
                     boolean exists = false;

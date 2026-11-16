@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng vip_packages trong CSDL MySQL
- */
 public class VipPackageDao {
 
     public static List<VipPackage> getAllVipPackages() throws SQLException {

@@ -59,21 +59,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private View adminHeader;
     private ProgressBar progressBar;
 
-    // Tabs (6 tabs)
     private Button tabBtnStats, tabBtnMovies, tabBtnUsers, tabBtnCasts, tabBtnVip, tabBtnComments;
     private View viewTabStats, viewTabMovies, viewTabUsers, viewTabCasts, viewTabVip, viewTabComments;
 
-    // Search Bars
     private EditText etSearchAdminMovies, etSearchAdminUsers, etSearchAdminComments;
 
-    // Tab 5: Comments Moderation
     private TextView tvCommentsCount, tvEmptyComments;
     private Button btnRefreshComments;
     private RecyclerView rvComments;
     private AdminCommentAdapter commentAdapter;
     private final List<Comment> commentList = new ArrayList<>();
 
-    // Tab 0: Stats & Analytics
     private TextView tvStatRevenue, tvStatRevenueSub;
     private TextView tvStatUsersTotal, tvStatVipPercent;
     private TextView tvStatMoviesTotal, tvStatVipMoviesSub;
@@ -84,20 +80,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView tvEmptyTopMovies;
     private Button btnRefreshStats;
 
-    // Tab 1: Movies
     private TextView tvMoviesCount;
     private Button btnAddMovie;
     private RecyclerView rvMovies;
     private AdminMovieAdapter movieAdapter;
     private final List<Movie> movieList = new ArrayList<>();
 
-    // Tab 2: Users
     private TextView tvUsersCount, tvVipUsersCount;
     private RecyclerView rvUsers;
     private AdminUserAdapter userAdapter;
     private final List<User> userList = new ArrayList<>();
 
-    // Tab 3: Casts
     private Spinner spinnerCastMovie;
     private TextView tvCastsCount;
     private Button btnAddCast;
@@ -107,14 +100,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private final List<Movie> spinnerMovieList = new ArrayList<>();
     private int selectedMovieId = -1;
 
-    // Tab 4: VIP Packages
     private TextView tvVipPkgCount;
     private Button btnAddVipPkg;
     private RecyclerView rvVipPackages;
     private AdminVipPackageAdapter vipPkgAdapter;
     private final List<VipPackage> vipPkgList = new ArrayList<>();
 
-    // Device Video & Poster Pickers (Lưu trực tiếp vào bộ nhớ ứng dụng)
     private ActivityResultLauncher<String> pickVideoLauncher;
     private ActivityResultLauncher<String> pickPosterLauncher;
     private EditText currentVideoInputTarget;
@@ -160,7 +151,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
 
-        // 1. Bộ chọn Video MP4 từ thiết bị -> Sao chép vào getFilesDir()/movies/
         pickVideoLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -190,7 +180,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 }
         );
 
-        // 2. Bộ chọn Ảnh Poster từ thiết bị -> Sao chép vào getFilesDir()/posters/
         pickPosterLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -217,7 +206,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         handleWindowInsets();
         setupTabs();
 
-        // Mặc định nạp Bảng Thống Kê Tổng Quan trước
         selectTab(0);
     }
 
@@ -242,7 +230,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        // Setup Tab 0: Stats & Analytics
         tvStatRevenue          = findViewById(R.id.tvStatRevenue);
         tvStatRevenueSub       = findViewById(R.id.tvStatRevenueSub);
         tvStatUsersTotal       = findViewById(R.id.tvStatUsersTotal);
@@ -261,7 +248,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
             btnRefreshStats.setOnClickListener(v -> loadDashboardStats());
         }
 
-        // Setup Tab 1: Movies
         tvMoviesCount = findViewById(R.id.tvAdminMoviesCount);
         btnAddMovie   = findViewById(R.id.btnAdminAddMovie);
         rvMovies      = findViewById(R.id.rvAdminMovies);
@@ -304,7 +290,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
             });
         }
 
-        // Setup Tab 2: Users
         tvUsersCount    = findViewById(R.id.tvAdminUsersCount);
         tvVipUsersCount = findViewById(R.id.tvAdminVipUsersCount);
         rvUsers         = findViewById(R.id.rvAdminUsers);
@@ -367,7 +352,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
             });
         }
 
-        // Setup Tab 3: Casts
         spinnerCastMovie = findViewById(R.id.spinnerAdminCastMovie);
         tvCastsCount     = findViewById(R.id.tvAdminCastsCount);
         btnAddCast       = findViewById(R.id.btnAdminAddCast);
@@ -398,7 +382,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
             showAddCastDialog(selectedMovieId);
         });
 
-        // Setup Tab 4: VIP Packages
         tvVipPkgCount = findViewById(R.id.tvAdminVipPkgCount);
         btnAddVipPkg  = findViewById(R.id.btnAdminAddVipPkg);
         rvVipPackages = findViewById(R.id.rvAdminVipPackages);
@@ -447,7 +430,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         rvVipPackages.setAdapter(vipPkgAdapter);
         btnAddVipPkg.setOnClickListener(v -> showVipPackageDialog(null));
 
-        // Setup Tab 5: Comments Moderation
         tvCommentsCount       = findViewById(R.id.tvAdminCommentsCount);
         tvEmptyComments       = findViewById(R.id.tvEmptyAdminComments);
         btnRefreshComments    = findViewById(R.id.btnRefreshComments);
@@ -543,9 +525,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
     }
 
-    // =========================================================================
-    // TAB 0: BẢNG THỐNG KÊ & ANALYTICS
-    // =========================================================================
     private void loadDashboardStats() {
         progressBar.setVisibility(View.VISIBLE);
         AdminController.getDashboardStats(new AdminController.DashboardStatsCallback() {
@@ -554,23 +533,18 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (stats == null) return;
 
-                // 1. Doanh thu
                 tvStatRevenue.setText(stats.getFormattedRevenue());
                 tvStatRevenueSub.setText("Ước tính từ " + stats.getVipUsers() + " thành viên VIP");
 
-                // 2. Người dùng & VIP
                 tvStatUsersTotal.setText(stats.getTotalUsers() + " Tài khoản");
                 tvStatVipPercent.setText(stats.getVipUsers() + " VIP • " + stats.getRegularUsers() + " Thường");
 
-                // 3. Kho phim
                 tvStatMoviesTotal.setText(stats.getTotalMovies() + " Phim");
                 tvStatVipMoviesSub.setText(stats.getVipMovies() + " Phim VIP (>8.0★)");
 
-                // 4. Lượt xem & Tương tác
                 tvStatViewsTotal.setText(String.format(Locale.US, "%,d Lượt xem", stats.getTotalViews()));
                 tvStatInteractions.setText(stats.getTotalComments() + " Bình luận • " + stats.getTotalRatings() + " Đánh giá");
 
-                // 5. Tỷ lệ chuyển đổi VIP
                 tvStatConversionRate.setText(stats.getVipConversionRate());
                 int percent = 0;
                 if (stats.getTotalUsers() > 0) {
@@ -580,7 +554,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 tvStatConversionDetail.setText(stats.getVipUsers() + "/" + stats.getTotalUsers()
                         + " tài khoản đã nâng cấp VIP (" + stats.getVipConversionRate() + ")");
 
-                // 6. Top 5 Phim
                 populateTopMovies(stats.getTopMovies());
             }
 
@@ -652,9 +625,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
     }
 
-    // =========================================================================
-    // TAB 1: PHIM
-    // =========================================================================
     private void loadMovies() {
         progressBar.setVisibility(View.VISIBLE);
         MovieController.getAllMovies(new MovieController.MovieListCallback() {
@@ -759,7 +729,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             etOverview.setText(existingMovie.getOverview());
             btnSave.setText("Cập Nhật");
         } else {
-            // Mặc định cho phim thêm mới là file MP4 nội bộ
+
             etVideo.setText("raw/sample_movie.mp4");
         }
 
@@ -784,7 +754,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             m.setVideoUrl(etVideo.getText().toString().trim());
             m.setOverview(etOverview.getText().toString().trim());
             if (m.getGenreId() <= 0) {
-                m.setGenreId(28); // Mặc định thể loại Hành Động (28)
+                m.setGenreId(28);
             }
 
             dialog.dismiss();
@@ -826,9 +796,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // =========================================================================
-    // TAB 2: TÀI KHOẢN
-    // =========================================================================
     private void loadUsers() {
         progressBar.setVisibility(View.VISIBLE);
         AdminController.getAllUsers(new AdminController.UserListCallback() {
@@ -877,9 +844,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         b.show();
     }
 
-    // =========================================================================
-    // TAB 3: DIỄN VIÊN
-    // =========================================================================
     private void loadCastsTab() {
         progressBar.setVisibility(View.VISIBLE);
         MovieController.getAllMovies(new MovieController.MovieListCallback() {
@@ -993,9 +957,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // =========================================================================
-    // TAB 4: GÓI VIP
-    // =========================================================================
     private void loadVipPackages() {
         progressBar.setVisibility(View.VISIBLE);
         AdminController.getVipPackages(new AdminController.VipPackageListCallback() {
@@ -1035,7 +996,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             tvTitle.setText("👑 Chỉnh Sửa Gói VIP");
             etName.setText(existingPkg.getName());
             etCode.setText(existingPkg.getCode());
-            etCode.setEnabled(false); // Không đổi mã
+            etCode.setEnabled(false);
             etPrice.setText(String.format(Locale.US, "%.0f", existingPkg.getPrice()));
             etDuration.setText(String.valueOf(existingPkg.getDurationDays()));
             etDesc.setText(existingPkg.getDescription());
@@ -1114,9 +1075,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 .show();
     }
 
-    // =========================================================================
-    // TAB 5: BÌNH LUẬN & ĐÁNH GIÁ (COMMENTS MODERATION)
-    // =========================================================================
     private void loadComments() {
         progressBar.setVisibility(View.VISIBLE);
         AdminController.getAllComments(new AdminController.CommentListCallback() {

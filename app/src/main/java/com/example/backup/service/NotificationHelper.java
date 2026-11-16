@@ -22,9 +22,6 @@ public class NotificationHelper {
     public static final String CHANNEL_ID = "nitflex_movies_channel";
     public static final String CHANNEL_NAME = "Phim Mới Nit Flex";
 
-    /**
-     * Khởi tạo Notification Channel cho Android 8.0 (API 26+) trở lên
-     */
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -43,15 +40,11 @@ public class NotificationHelper {
         }
     }
 
-    /**
-     * Gửi thông báo phim mới lên thanh thông báo của thiết bị
-     */
     public static void showMovieNotification(Context context, Movie movie) {
         if (context == null || movie == null) return;
 
         createNotificationChannel(context);
 
-        // Kiểm tra quyền trên Android 13+ (API 33)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -59,7 +52,6 @@ public class NotificationHelper {
             }
         }
 
-        // Tạo Intent mở thẳng màn hình chi tiết phim khi nhấn vào thông báo
         Intent intent = new Intent(context, MovieDetailActivity.class);
         intent.putExtra("movie_id", movie.getId());
         intent.putExtra("movie", movie);
@@ -95,7 +87,7 @@ public class NotificationHelper {
         try {
             NotificationManagerCompat.from(context).notify(movie.getId(), builder.build());
         } catch (SecurityException ignored) {
-            // Không có quyền gửi thông báo
+
         }
     }
 }

@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 1. Kiểm tra trạng thái phiên đăng nhập
         SessionManager session = new SessionManager(this);
         if (!session.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNav = findViewById(R.id.bottomNavigation);
 
-        // Tối ưu Padding System Bars (Status Bar / Display Cutout / Navigation Bar)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainRoot), (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(
                     WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        // 2. Khởi tạo Fragment Manager: Add Fragment đầu tiên
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
                     .add(R.id.fragmentContainer, profileFragment, "profile").hide(profileFragment)
@@ -71,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
             activeFragment = homeFragment;
         }
 
-        // 3. Xử lý chuyển đổi Tab siêu mượt (Show/Hide giữ nguyên State & cuộn trang)
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
@@ -103,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
         activeFragment = target;
     }
 
-    /**
-     * Phương thức cho phép các Fragment hoặc sự kiện bên trong chuyển tab nhanh
-     */
     public void selectTab(int menuId) {
         if (bottomNav != null) {
             bottomNav.setSelectedItemId(menuId);

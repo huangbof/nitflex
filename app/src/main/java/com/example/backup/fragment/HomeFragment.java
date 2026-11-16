@@ -47,7 +47,6 @@ public class HomeFragment extends Fragment {
     private TextView btnTopAiChat;
     private View headerLayout;
 
-    // Banner views
     private View bannerCard;
     private ImageView imgBanner;
     private TextView tvBannerTitle, tvBannerRating, tvSectionTitle;
@@ -56,7 +55,6 @@ public class HomeFragment extends Fragment {
     private SessionManager session;
     private ActivityResultLauncher<String> requestPermissionLauncher;
 
-    // Continue Watching Section
     private View layoutContinueWatching;
     private RecyclerView rvContinueWatching;
     private TextView btnHomeViewHistory;
@@ -96,7 +94,7 @@ public class HomeFragment extends Fragment {
 
         loadContinueWatchingMovies();
         loadGenres();
-        loadMovies(null); // load all
+        loadMovies(null);
     }
 
     private void initViews(View view) {
@@ -183,7 +181,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        // Continue Watching Horizontal List
+
         if (rvContinueWatching != null) {
             rvContinueWatching.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
             continueWatchingAdapter = new ContinueWatchingAdapter(requireContext(), continueWatchingList, new ContinueWatchingAdapter.OnContinueWatchingListener() {
@@ -213,7 +211,6 @@ public class HomeFragment extends Fragment {
             rvContinueWatching.setAdapter(continueWatchingAdapter);
         }
 
-        // Genres Horizontal List
         rvGenres.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         genreAdapter = new GenreAdapter(requireContext(), genreList, genre -> {
             if (genre.getId() == 0) {
@@ -226,7 +223,6 @@ public class HomeFragment extends Fragment {
         });
         rvGenres.setAdapter(genreAdapter);
 
-        // Movies 2-column Grid
         rvMovies.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         movieAdapter = new MovieAdapter(requireContext(), movieList, movie -> {
             Intent intent = new Intent(requireContext(), MovieDetailActivity.class);
@@ -256,7 +252,7 @@ public class HomeFragment extends Fragment {
         intent.putExtra("movie_id", movie.getId());
         intent.putExtra("video_url", movie.getVideoUrl());
         intent.putExtra("movie_title", movie.getTitle());
-        intent.putExtra("start_position", movie.getWatchProgress() * 1000); // Đổi giây sang ms
+        intent.putExtra("start_position", movie.getWatchProgress() * 1000);
         startActivity(intent);
     }
 

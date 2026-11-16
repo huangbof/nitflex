@@ -97,7 +97,6 @@ public class ProfileFragment extends Fragment {
             tvAvatar.setText(uName.substring(0, 1).toUpperCase());
         }
 
-        // Bấm vào thẻ Yêu thích -> Chuyển sang Tab Yêu thích
         if (cardOpenFavorites != null) {
             cardOpenFavorites.setOnClickListener(v -> {
                 if (getActivity() instanceof MainActivity) {
@@ -114,7 +113,6 @@ public class ProfileFragment extends Fragment {
             btnClearHistory.setOnClickListener(v -> showClearHistoryDialog());
         }
 
-        // Setup RecyclerView Lịch sử xem (lưới 2 cột)
         rvWatchHistory.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         historyAdapter = new MovieAdapter(requireContext(), historyList, movie -> {
             Intent intent = new Intent(requireContext(), MovieDetailActivity.class);

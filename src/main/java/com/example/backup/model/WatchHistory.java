@@ -7,7 +7,7 @@ public class WatchHistory {
     private int userId;
     private int movieId;
     private Timestamp watchedAt;
-    private int progress; // seconds watched
+    private int progress;
 
     public WatchHistory() {}
 

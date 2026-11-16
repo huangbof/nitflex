@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng comments trong CSDL MySQL
- */
 public class CommentDao {
 
     public static List<Comment> getComments(int movieId) throws SQLException {

@@ -46,7 +46,6 @@ public class RegisterActivity extends AppCompatActivity {
             String p  = etRegPassword.getText().toString().trim();
             String cp = etRegConfirmPassword.getText().toString().trim();
 
-            // 1. Kiểm tra để trống
             if (u.isEmpty()) {
                 etRegUsername.setError("Vui lòng nhập tên đăng nhập!");
                 etRegUsername.requestFocus();
@@ -68,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            // 2. Kiểm tra tên đăng nhập (độ dài >= 3, không chứa dấu cách)
             if (u.length() < 3) {
                 etRegUsername.setError("Tên đăng nhập phải có ít nhất 3 ký tự!");
                 etRegUsername.requestFocus();
@@ -80,28 +78,24 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            // 3. Kiểm tra định dạng Email
             if (!Patterns.EMAIL_ADDRESS.matcher(e).matches()) {
                 etRegEmail.setError("Địa chỉ email không đúng định dạng (ví dụ: user@gmail.com)!");
                 etRegEmail.requestFocus();
                 return;
             }
 
-            // 4. Kiểm tra độ dài mật khẩu (tối thiểu 6 ký tự)
             if (p.length() < 6) {
                 etRegPassword.setError("Mật khẩu bảo mật phải có ít nhất 6 ký tự!");
                 etRegPassword.requestFocus();
                 return;
             }
 
-            // 5. Kiểm tra mật khẩu xác nhận khớp nhau
             if (!p.equals(cp)) {
                 etRegConfirmPassword.setError("Mật khẩu xác nhận không khớp với mật khẩu đã nhập!");
                 etRegConfirmPassword.requestFocus();
                 return;
             }
 
-            // Bắt đầu gửi dữ liệu đăng ký tới CSDL MySQL
             btnRegister.setEnabled(false);
             btnRegister.setText("Đang đăng ký...");
 
@@ -110,7 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onSuccess(int userId, String username) {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thành công! Chào mừng " + username, Toast.LENGTH_LONG).show();
 
-                    // Tự động chuyển về màn hình đăng nhập và điền sẵn username
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     intent.putExtra("REGISTERED_USERNAME", username);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

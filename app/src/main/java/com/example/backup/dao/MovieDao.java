@@ -10,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object chuyên xử lý truy vấn bảng movies trong CSDL MySQL
- */
 public class MovieDao {
 
     public static Movie mapMovie(ResultSet rs) throws SQLException {

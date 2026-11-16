@@ -68,7 +68,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             holder.tvYear.setText("");
         }
 
-        // Hiển thị huy hiệu VIP cho phim có điểm TMDB > 7.0
         if (holder.tvVipBadge != null) {
             holder.tvVipBadge.setVisibility(movie.isVip() ? View.VISIBLE : View.GONE);
         }

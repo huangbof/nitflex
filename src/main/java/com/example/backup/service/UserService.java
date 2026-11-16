@@ -9,9 +9,6 @@ public class UserService {
 
     private final UserRepository userRepo = new UserRepository();
 
-    // -----------------------------------------------------------------------
-    // login — hash the supplied password with MD5, then compare
-    // -----------------------------------------------------------------------
     public User login(String username, String password) {
         if (username == null || password == null) return null;
         User user = userRepo.findByUsername(username);
@@ -23,9 +20,6 @@ public class UserService {
         return null;
     }
 
-    // -----------------------------------------------------------------------
-    // register — check duplicates, hash password, persist
-    // -----------------------------------------------------------------------
     public boolean register(String username, String password, String email) {
         if (username == null || password == null || email == null) return false;
         if (userRepo.existsByUsername(username)) return false;
@@ -44,23 +38,14 @@ public class UserService {
         return newId > 0;
     }
 
-    // -----------------------------------------------------------------------
-    // getProfile
-    // -----------------------------------------------------------------------
     public User getProfile(int userId) {
         return userRepo.findById(userId);
     }
 
-    // -----------------------------------------------------------------------
-    // updateAvatar
-    // -----------------------------------------------------------------------
     public boolean updateAvatar(int userId, String avatarUrl) {
         return userRepo.updateAvatar(userId, avatarUrl);
     }
 
-    // -----------------------------------------------------------------------
-    // MD5 helper
-    // -----------------------------------------------------------------------
     private String md5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

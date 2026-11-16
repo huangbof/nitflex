@@ -16,9 +16,6 @@ public class GenreRepository {
         return new Genre(rs.getInt("id"), rs.getString("name"));
     }
 
-    // -----------------------------------------------------------------------
-    // findAll
-    // -----------------------------------------------------------------------
     public List<Genre> findAll() {
         List<Genre> genres = new ArrayList<>();
         String sql = "SELECT * FROM genres ORDER BY name ASC";
@@ -31,9 +28,6 @@ public class GenreRepository {
         return genres;
     }
 
-    // -----------------------------------------------------------------------
-    // findById
-    // -----------------------------------------------------------------------
     public Genre findById(int id) {
         String sql = "SELECT * FROM genres WHERE id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {

@@ -12,9 +12,6 @@ public class FavoriteRepository {
         return DBConnection.getInstance().getConnection();
     }
 
-    // -----------------------------------------------------------------------
-    // Helper: map a ResultSet row to a Movie (JOIN result)
-    // -----------------------------------------------------------------------
     private Movie mapMovieRow(ResultSet rs) throws SQLException {
         Movie m = new Movie();
         m.setId(rs.getInt("id"));
@@ -34,9 +31,6 @@ public class FavoriteRepository {
         return m;
     }
 
-    // -----------------------------------------------------------------------
-    // findByUserId — returns movies that the user has favourited
-    // -----------------------------------------------------------------------
     public List<Movie> findByUserId(int userId) {
         List<Movie> movies = new ArrayList<>();
         String sql = "SELECT m.* FROM movies m "
@@ -54,9 +48,6 @@ public class FavoriteRepository {
         return movies;
     }
 
-    // -----------------------------------------------------------------------
-    // isFavorite
-    // -----------------------------------------------------------------------
     public boolean isFavorite(int userId, int movieId) {
         String sql = "SELECT COUNT(*) FROM favorites WHERE user_id = ? AND movie_id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -71,9 +62,6 @@ public class FavoriteRepository {
         return false;
     }
 
-    // -----------------------------------------------------------------------
-    // add
-    // -----------------------------------------------------------------------
     public boolean add(int userId, int movieId) {
         String sql = "INSERT INTO favorites (user_id, movie_id, added_at) VALUES (?, ?, NOW())";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -86,9 +74,6 @@ public class FavoriteRepository {
         return false;
     }
 
-    // -----------------------------------------------------------------------
-    // remove
-    // -----------------------------------------------------------------------
     public boolean remove(int userId, int movieId) {
         String sql = "DELETE FROM favorites WHERE user_id = ? AND movie_id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {

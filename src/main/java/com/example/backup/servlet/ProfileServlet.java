@@ -35,7 +35,6 @@ public class ProfileServlet extends HttpServlet {
                 return;
             }
 
-            // Strip password_hash before sending
             user.setPasswordHash(null);
             out.print(gson.toJson(user));
 

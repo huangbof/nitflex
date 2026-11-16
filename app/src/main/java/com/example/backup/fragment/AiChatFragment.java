@@ -69,14 +69,12 @@ public class AiChatFragment extends Fragment {
             });
         }
 
-        // Setup Chat RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         layoutManager.setStackFromEnd(true);
         rvChat.setLayoutManager(layoutManager);
         chatAdapter = new ChatAdapter(requireContext(), messageList);
         rvChat.setAdapter(chatAdapter);
 
-        // Tin nhắn chào mừng ban đầu nếu chưa có
         if (messageList.isEmpty()) {
             addWelcomeMessage();
         }
@@ -129,15 +127,13 @@ public class AiChatFragment extends Fragment {
         scrollToBottom();
         etInput.setText("");
 
-        // Hiện typing indicator
         isWaitingReply = true;
         btnSend.setEnabled(false);
         if (typingIndicator != null) typingIndicator.setVisibility(View.VISIBLE);
 
-        // Gọi AI xử lý
         AiAssistantController.askAi(text, (replyText, suggestedMovie) -> {
             if (!isAdded()) return;
-            // Ẩn typing indicator
+
             if (typingIndicator != null) typingIndicator.setVisibility(View.GONE);
             isWaitingReply = false;
             btnSend.setEnabled(true);

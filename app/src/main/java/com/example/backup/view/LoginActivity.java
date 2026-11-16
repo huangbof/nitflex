@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvGoToRegister;
     private SessionManager session;
 
-    // Google Sign-In Client & ActivityResultLauncher (theo tài liệu Buổi 10)
     private GoogleSignInClient mGoogleSignInClient;
     private ActivityResultLauncher<Intent> registerForActivityResult;
 
@@ -61,22 +60,18 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogleSignIn = findViewById(R.id.sign_in_button);
         tvGoToRegister = findViewById(R.id.tvGoToRegister);
 
-        // Nhận username đăng ký chuyển sang nếu có
         checkRegisteredUsername(getIntent());
 
-        // 1. Cấu hình GoogleSignInOptions yêu cầu Email (theo Bước 2 Buổi 10)
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Tùy biến nút đăng nhập Google sang chuẩn WIDE và Dark theme
         if (btnGoogleSignIn != null) {
             btnGoogleSignIn.setSize(SignInButton.SIZE_WIDE);
             btnGoogleSignIn.setColorScheme(SignInButton.COLOR_DARK);
         }
 
-        // 2. Đăng ký ActivityResultLauncher nhận kết quả đăng nhập Google
         registerForActivityResult = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -89,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
         );
 
-        // Bắt sự kiện bấm nút Đăng nhập Google
         if (btnGoogleSignIn != null) {
             btnGoogleSignIn.setOnClickListener(v -> {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -97,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-        // Đăng nhập bằng tên đăng nhập HOẶC Email + Mật khẩu
         btnLogin.setOnClickListener(v -> {
             String u = etUsername.getText().toString().trim();
             String p = etPassword.getText().toString().trim();
@@ -161,14 +154,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Nếu phiên đăng nhập hiện tại còn hiệu lực, chuyển vào Main luôn
+
         if (session.isLoggedIn()) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
 
-        // Tự động nhận diện tài khoản Google đã đăng nhập gần nhất (theo hướng dẫn Buổi 10)
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             Toast.makeText(this, "Đã đăng nhập tài khoản " + account.getEmail(), Toast.LENGTH_SHORT).show();
@@ -200,7 +192,6 @@ public class LoginActivity extends AppCompatActivity {
             displayName = (email != null && email.contains("@")) ? email.substring(0, email.indexOf("@")) : "Google User";
         }
 
-        // Lưu / đồng bộ tài khoản Google vào CSDL MySQL của Nit Flex
         final String finalName = displayName;
         AuthController.loginOrRegisterGoogleUser(email, displayName, new AuthController.AuthCallback() {
             @Override
@@ -213,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(String message) {
-                // Fallback nếu MySQL có lỗi tạm thời để không gián đoạn trải nghiệm của người dùng
+
                 session.setLogin(true, 9999, finalName);
                 Toast.makeText(LoginActivity.this, "Chào mừng " + finalName + "!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));

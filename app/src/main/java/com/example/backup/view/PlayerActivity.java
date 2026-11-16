@@ -52,7 +52,6 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView tvTitle;
     private TextView tvPlayerSub;
 
-    // Custom Controls
     private View btnRewind10;
     private ImageButton btnPlayPause;
     private View btnForward10;
@@ -73,7 +72,6 @@ public class PlayerActivity extends AppCompatActivity {
     private boolean isEndgameMovie = false;
     private boolean isMovieCompleted = false;
 
-    // Quản lý âm lượng và Audio Focus chống mất tiếng
     private AudioManager audioManager;
     private AudioFocusRequest audioFocusRequest;
     private MediaPlayer currentMediaPlayer;
@@ -100,10 +98,8 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Giữ màn hình luôn sáng trong suốt thời gian xem phim
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // Cho phép video mở rộng tối đa sát viền màn hình (kể cả vùng camera nốt ruồi / tai thỏ)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             getWindow().getAttributes().layoutInDisplayCutoutMode =
                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -112,7 +108,6 @@ public class PlayerActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_player);
 
-        // Khóa luồng điều khiển âm lượng vật lý là STREAM_MUSIC và đảm bảo có tiếng
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         checkAndEnsureAudio();
         requestAudioFocus();
@@ -122,7 +117,7 @@ public class PlayerActivity extends AppCompatActivity {
         videoUrl   = getIntent().getStringExtra("video_url");
         movieTitle = getIntent().getStringExtra("movie_title");
 
-        isEndgameMovie = (movieTitle != null && (movieTitle.toLowerCase().contains("endgame") 
+        isEndgameMovie = (movieTitle != null && (movieTitle.toLowerCase().contains("endgame")
                 || movieTitle.toLowerCase().contains("hồi kết")))
                 || (movieId == 299534);
 
@@ -135,7 +130,6 @@ public class PlayerActivity extends AppCompatActivity {
             tvTitle.setText(movieTitle);
         }
 
-        // Khôi phục mốc thời gian đang xem dở (start_position truyền từ Intent hoặc Local Cache / MySQL)
         int passedPosition = getIntent().getIntExtra("start_position", 0);
         if (passedPosition > 0) {
             currentPosition = passedPosition;
@@ -180,7 +174,6 @@ public class PlayerActivity extends AppCompatActivity {
         btnToggleOrientation  = findViewById(R.id.btnToggleOrientation);
     }
 
-    // Chế độ xem phim chuẩn điện ảnh: ẩn status bar và gesture navigation bar
     private void enableImmersiveCinemaMode() {
         WindowInsetsControllerCompat controller =
                 WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
@@ -192,7 +185,6 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    // Tối ưu căn chỉnh viền (WindowInsets + DisplayCutout) cho cả màn hình dọc và màn hình xoay ngang
     private void handleWindowInsets() {
         View root = findViewById(R.id.playerRoot);
 
@@ -208,7 +200,7 @@ public class PlayerActivity extends AppCompatActivity {
             int dp36 = dpToPx(36);
 
             if (isLandscape) {
-                // Khi để màn hình ngang: đẩy an toàn sang hai bên để camera nốt ruồi không đè vào nút Back và tiêu đề
+
                 int safeLeft  = Math.max(insets.left, dp36);
                 int safeRight = Math.max(insets.right, dp36);
                 int safeTop   = Math.max(insets.top, dp16);
@@ -217,7 +209,7 @@ public class PlayerActivity extends AppCompatActivity {
                 topBar.setPadding(safeLeft, safeTop, safeRight, dp16);
                 layoutBottomBar.setPadding(safeLeft, dp16, safeRight, safeBot);
             } else {
-                // Khi để màn hình dọc
+
                 int safeTop = insets.top + dp16;
                 int safeBot = insets.bottom + dp16;
 
@@ -238,7 +230,6 @@ public class PlayerActivity extends AppCompatActivity {
     private void setupControlListeners() {
         btnBack.setOnClickListener(v -> finish());
 
-        // Bấm vào vùng màn hình để ẩn/hiện bảng điều khiển
         View.OnClickListener toggleListener = v -> {
             if (isControlsVisible) {
                 hideControls();
@@ -250,7 +241,6 @@ public class PlayerActivity extends AppCompatActivity {
         layoutControlsOverlay.setOnClickListener(toggleListener);
         findViewById(R.id.playerRoot).setOnClickListener(toggleListener);
 
-        // Nút Play / Pause
         btnPlayPause.setOnClickListener(v -> {
             if (videoView.isPlaying()) {
                 videoView.pause();
@@ -263,7 +253,6 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
-        // Tua lùi 10 giây
         btnRewind10.setOnClickListener(v -> {
             int current = videoView.getCurrentPosition();
             int target = Math.max(0, current - 10000);
@@ -273,7 +262,6 @@ public class PlayerActivity extends AppCompatActivity {
             showControlsWithTimeout();
         });
 
-        // Tua tiến 10 giây
         btnForward10.setOnClickListener(v -> {
             int current = videoView.getCurrentPosition();
             int max = totalDuration > 0 ? totalDuration : videoView.getDuration();
@@ -284,7 +272,6 @@ public class PlayerActivity extends AppCompatActivity {
             showControlsWithTimeout();
         });
 
-        // Nút xoay nhanh hướng màn hình ngang / dọc
         btnToggleOrientation.setOnClickListener(v -> {
             int currentOrientation = getResources().getConfiguration().orientation;
             if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -295,7 +282,6 @@ public class PlayerActivity extends AppCompatActivity {
             showControlsWithTimeout();
         });
 
-        // Thanh kéo thời lượng (SeekBar)
         playerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -330,7 +316,7 @@ public class PlayerActivity extends AppCompatActivity {
         if (!isUserTracking && videoView.isPlaying()) {
             layoutControlsOverlay.setVisibility(View.GONE);
             isControlsVisible = false;
-            enableImmersiveCinemaMode(); // Duy trì ẩn thanh hệ thống khi xem phim
+            enableImmersiveCinemaMode();
         }
     }
 
@@ -380,7 +366,6 @@ public class PlayerActivity extends AppCompatActivity {
         int rawResId = 0;
         String subtitleText = "Đang phát phim • Nit Flex Player";
 
-        // 1. Phân giải videoUrl từ cơ sở dữ liệu nếu có
         if (videoUrl != null && !videoUrl.trim().isEmpty()) {
             String cleanUrl = videoUrl.trim();
             File localFile = new File(cleanUrl);
@@ -394,7 +379,7 @@ public class PlayerActivity extends AppCompatActivity {
                 resolvedUri = Uri.parse(cleanUrl);
                 subtitleText = "Video từ bộ nhớ thiết bị • Nit Flex Player";
             } else if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
-                // Tự động phân giải tên file trong res/raw (hỗ trợ cả raw/endgame, endgame.mp4 hoặc chỉ gõ endgame)
+
                 String resName = cleanUrl.replace("raw/", "").replace(".mp4", "").trim().toLowerCase();
                 int resId = getResources().getIdentifier(resName, "raw", getPackageName());
                 if (resId != 0) {
@@ -408,14 +393,12 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }
 
-        // 2. Nếu là Avengers: Endgame
         if (resolvedUri == null && isEndgameMovie) {
             rawResId = R.raw.endgame;
             resolvedUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.endgame);
             subtitleText = "Đang phát bản phim Avengers: Endgame • Nit Flex 1080p";
         }
 
-        // 3. Fallback mặc định về file MP4 nội bộ
         if (resolvedUri == null) {
             rawResId = R.raw.sample_movie;
             resolvedUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.sample_movie);
@@ -429,7 +412,6 @@ public class PlayerActivity extends AppCompatActivity {
         final Uri finalRawUri = resolvedUri;
         final int finalRawResId = rawResId;
 
-        // Tự động kiểm tra xem video có bị phân mảnh fMP4 (Endgame, Infinity War, Avatar...) hay không
         boolean isFmp4 = VideoRemuxer.isFragmentedMp4(this, finalRawUri, finalRawResId);
 
         if (isFmp4) {
@@ -445,7 +427,7 @@ public class PlayerActivity extends AppCompatActivity {
                 startPlayerWithUri(playableUri);
             });
         } else {
-            // Video MP4 tiêu chuẩn phát trực tiếp
+
             int detectedDur = VideoRemuxer.detectMediaDurationMs(this, finalRawUri, finalRawResId);
             if (detectedDur > 0) {
                 totalDuration = detectedDur;
@@ -466,7 +448,6 @@ public class PlayerActivity extends AppCompatActivity {
                 layoutLoading.setVisibility(View.GONE);
                 mp.setLooping(false);
 
-                // Khóa luồng âm thanh Media và đặt âm lượng tối đa 1.0f
                 try {
                     mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     mp.setVolume(1.0f, 1.0f);
@@ -488,14 +469,13 @@ public class PlayerActivity extends AppCompatActivity {
 
                 if (currentPosition > 0) {
                     if (totalDuration > 5000 && currentPosition >= totalDuration - 5000) {
-                        currentPosition = 0; // Đã xem hết phim thì phát lại từ đầu
+                        currentPosition = 0;
                     }
                     videoView.seekTo(currentPosition);
                 }
                 videoView.start();
                 btnPlayPause.setImageResource(android.R.drawable.ic_media_pause);
 
-                // Tự động tăng lượt xem phim trong CSDL MySQL
                 if (movieId > 0) {
                     MovieController.incrementMovieViewCount(movieId);
                 }
@@ -517,10 +497,10 @@ public class PlayerActivity extends AppCompatActivity {
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                // Kiểm tra xem có thực sự phát đến cuối phim không (tránh trường hợp MediaPlayer báo hoàn tất sớm)
+
                 int current = videoView.getCurrentPosition();
                 if (totalDuration > 5000 && current < totalDuration - 3000) {
-                    // Chưa đến cuối phim mà bị ngắt: tiếp tục phát
+
                     videoView.seekTo(current);
                     videoView.start();
                     return;
@@ -528,7 +508,7 @@ public class PlayerActivity extends AppCompatActivity {
                 isMovieCompleted = true;
                 btnPlayPause.setImageResource(android.R.drawable.ic_media_play);
                 showControlsWithTimeout();
-                // Đã xem hết phim: đặt tiến độ bằng tổng thời lượng (durSec) để tự động ẩn khỏi Tiếp Tục Xem
+
                 int durSec = totalDuration > 0 ? (totalDuration / 1000) : 7200;
                 session.saveLocalWatchProgress(movieId, durSec, durSec);
                 if (session.isLoggedIn() && movieId > 0) {
@@ -543,7 +523,7 @@ public class PlayerActivity extends AppCompatActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         enableImmersiveCinemaMode();
-        // Áp dụng lại safe insets khi xoay màn hình
+
         ViewCompat.requestApplyInsets(findViewById(R.id.playerRoot));
     }
 
@@ -597,7 +577,6 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    // Tự động kiểm tra và mở âm lượng Media nếu máy đang bị tắt tiếng (Mute / 0)
     private void checkAndEnsureAudio() {
         try {
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -615,7 +594,6 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    // Yêu cầu Audio Focus để hệ thống Android ưu tiên phát âm thanh phim, không bị các luồng khác can thiệp
     private void requestAudioFocus() {
         try {
             if (audioManager == null) {
@@ -649,7 +627,6 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    // Giải phóng Audio Focus khi thoát xem phim
     private void abandonAudioFocus() {
         try {
             if (audioManager != null) {

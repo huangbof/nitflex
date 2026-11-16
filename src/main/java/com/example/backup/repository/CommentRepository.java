@@ -12,9 +12,6 @@ public class CommentRepository {
         return DBConnection.getInstance().getConnection();
     }
 
-    // -----------------------------------------------------------------------
-    // Helper: map row (JOIN with users)
-    // -----------------------------------------------------------------------
     private Comment mapRow(ResultSet rs) throws SQLException {
         Comment c = new Comment();
         c.setId(rs.getInt("id"));
@@ -26,9 +23,6 @@ public class CommentRepository {
         return c;
     }
 
-    // -----------------------------------------------------------------------
-    // findByMovieId — JOIN users to get username
-    // -----------------------------------------------------------------------
     public List<Comment> findByMovieId(int movieId) {
         List<Comment> comments = new ArrayList<>();
         String sql = "SELECT c.*, u.username FROM comments c "
@@ -46,9 +40,6 @@ public class CommentRepository {
         return comments;
     }
 
-    // -----------------------------------------------------------------------
-    // save
-    // -----------------------------------------------------------------------
     public boolean save(Comment comment) {
         String sql = "INSERT INTO comments (user_id, movie_id, content, created_at) VALUES (?, ?, ?, NOW())";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
@@ -62,9 +53,6 @@ public class CommentRepository {
         return false;
     }
 
-    // -----------------------------------------------------------------------
-    // delete — only the owner can delete their own comment
-    // -----------------------------------------------------------------------
     public boolean delete(int commentId, int userId) {
         String sql = "DELETE FROM comments WHERE id = ? AND user_id = ?";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {

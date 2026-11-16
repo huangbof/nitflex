@@ -49,7 +49,6 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
     private View headerLayout;
 
-    // Banner views
     private View bannerCard;
     private ImageView imgBanner;
     private TextView tvBannerTitle, tvBannerRating, tvSectionTitle;
@@ -59,7 +58,6 @@ public class HomeActivity extends AppCompatActivity {
     private boolean hasNotifiedStartup = false;
     private ActivityResultLauncher<String> requestPermissionLauncher;
 
-    // Continue Watching Section
     private View layoutContinueWatching;
     private RecyclerView rvContinueWatching;
     private TextView btnHomeViewHistory;
@@ -94,7 +92,7 @@ public class HomeActivity extends AppCompatActivity {
         setupRecyclerViews();
         setupBottomNavigation();
         loadGenres();
-        loadMovies(null); // load all
+        loadMovies(null);
     }
 
     private void initViews() {
@@ -153,7 +151,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // Setup Continue Watching views
         layoutContinueWatching = findViewById(R.id.layoutContinueWatching);
         rvContinueWatching     = findViewById(R.id.rvContinueWatching);
         btnHomeViewHistory     = findViewById(R.id.btnHomeViewHistory);
@@ -162,7 +159,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // Xử lý tỉ lệ tránh bị đè vào Status Bar / Notch camera và thanh Navigation Bar
     private void handleWindowInsets() {
         View root = findViewById(R.id.homeRoot);
         int padLeft = headerLayout.getPaddingLeft();
@@ -201,7 +197,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerViews() {
-        // Horizontal list for continue watching
+
         if (rvContinueWatching != null) {
             rvContinueWatching.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             continueWatchingAdapter = new ContinueWatchingAdapter(this, continueWatchingList, new ContinueWatchingAdapter.OnContinueWatchingListener() {
@@ -236,7 +232,6 @@ public class HomeActivity extends AppCompatActivity {
             rvContinueWatching.setAdapter(continueWatchingAdapter);
         }
 
-        // Horizontal list for genres
         rvGenres.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         genreAdapter = new GenreAdapter(this, genreList, genre -> {
             if (genre.getId() == 0) {
@@ -249,7 +244,6 @@ public class HomeActivity extends AppCompatActivity {
         });
         rvGenres.setAdapter(genreAdapter);
 
-        // 2 columns grid for movies
         rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
         movieAdapter = new MovieAdapter(this, movieList, movie -> {
             Intent intent = new Intent(HomeActivity.this, MovieDetailActivity.class);
@@ -271,7 +265,7 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("movie_id", movie.getId());
         intent.putExtra("video_url", movie.getVideoUrl());
         intent.putExtra("movie_title", movie.getTitle());
-        intent.putExtra("start_position", movie.getWatchProgress() * 1000); // Đổi giây sang ms
+        intent.putExtra("start_position", movie.getWatchProgress() * 1000);
         startActivity(intent);
     }
 
@@ -375,7 +369,6 @@ public class HomeActivity extends AppCompatActivity {
                 if (movies != null && !movies.isEmpty()) {
                     movieList.addAll(movies);
 
-                    // Phim đầu tiên hoặc phim điểm cao nhất làm banner
                     featuredMovie = movies.get(0);
                     bindBanner(featuredMovie);
                 }
@@ -417,7 +410,6 @@ public class HomeActivity extends AppCompatActivity {
                 .placeholder(R.drawable.gradient_banner_overlay)
                 .into(imgBanner);
 
-        // Gửi thông báo giới thiệu phim mới khi mở app lần đầu nếu có quyền
         if (!hasNotifiedStartup) {
             hasNotifiedStartup = true;
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
