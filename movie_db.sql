@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(150) UNIQUE,
+    phone VARCHAR(20) DEFAULT NULL,
     avatar_url VARCHAR(500) DEFAULT NULL,
     is_vip TINYINT DEFAULT 0,              -- 0: Tài khoản thường, 1: Tài khoản VIP
     role VARCHAR(50) DEFAULT 'user',       -- 'admin': Quản trị viên, 'user': Người dùng

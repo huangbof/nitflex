@@ -55,17 +55,40 @@ public class AuthController {
         });
     }
 
-    public static void register(String username, String password, String email, AuthCallback callback) {
+    public interface CheckCallback {
+        void onValid();
+        void onError(String message);
+    }
+
+    public static void checkBeforeRegister(String username, String email, String phone, CheckCallback callback) {
         executor.execute(() -> {
             try {
+                String duplicateMsg = UserDao.checkDuplicate(username, email, phone);
+                if (duplicateMsg != null) {
+                    mainHandler.post(() -> callback.onError(duplicateMsg));
+                } else {
+                    mainHandler.post(callback::onValid);
+                }
+            } catch (Exception e) {
+                mainHandler.post(() -> callback.onError("Lỗi kiểm tra thông tin: " + e.getMessage()));
+            }
+        });
+    }
 
-                String duplicateMsg = UserDao.checkDuplicate(username, email);
+    public static void register(String username, String password, String email, AuthCallback callback) {
+        register(username, password, email, null, callback);
+    }
+
+    public static void register(String username, String password, String email, String phone, AuthCallback callback) {
+        executor.execute(() -> {
+            try {
+                String duplicateMsg = UserDao.checkDuplicate(username, email, phone);
                 if (duplicateMsg != null) {
                     mainHandler.post(() -> callback.onError(duplicateMsg));
                     return;
                 }
 
-                int newId = UserDao.register(username, password, email);
+                int newId = UserDao.register(username, password, email, phone);
                 if (newId > 0) {
                     mainHandler.post(() -> callback.onSuccess(newId, username));
                 } else {

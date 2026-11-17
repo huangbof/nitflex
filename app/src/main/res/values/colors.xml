@@ -5,6 +5,7 @@
     <color name="primary_red_dark">#B20710</color>
     <color name="accent_red">#E50914</color>
     <color name="accent_gold">#FFC107</color>
+    <color name="gold">#FFC107</color>
 
     <!-- Backgrounds -->
     <color name="bg_dark">#0F0F0F</color>

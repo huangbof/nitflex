@@ -49,22 +49,71 @@ public class UserDao {
         return null;
     }
 
+    private static boolean phoneColumnChecked = false;
+
+    private static void ensurePhoneColumn(Connection conn) {
+        if (phoneColumnChecked || conn == null) return;
+        try (Statement st = conn.createStatement()) {
+            st.executeUpdate("ALTER TABLE users ADD COLUMN phone VARCHAR(20) DEFAULT NULL");
+        } catch (Exception ignored) {
+            // Đã tồn tại hoặc không đủ quyền alter
+        }
+        phoneColumnChecked = true;
+    }
+
     public static String checkDuplicate(String username, String email) throws SQLException {
-        String checkSql = "SELECT id, username, email FROM users WHERE username = ? OR email = ? LIMIT 1";
+        return checkDuplicate(username, email, null);
+    }
+
+    public static String checkDuplicate(String username, String email, String phone) throws SQLException {
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) throw new SQLException("Không thể kết nối đến MySQL!");
+            ensurePhoneColumn(conn);
+
+            boolean hasPhone = (phone != null && !phone.trim().isEmpty());
+            String checkSql = hasPhone
+                    ? "SELECT id, username, email, phone FROM users WHERE username = ? OR email = ? OR phone = ? LIMIT 1"
+                    : "SELECT id, username, email FROM users WHERE username = ? OR email = ? LIMIT 1";
+
             try (PreparedStatement ps = conn.prepareStatement(checkSql)) {
                 ps.setString(1, username);
                 ps.setString(2, email);
+                if (hasPhone) {
+                    ps.setString(3, phone.trim());
+                }
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         String foundU = rs.getString("username");
+                        String foundE = rs.getString("email");
                         if (username.equalsIgnoreCase(foundU)) {
                             return "Tên đăng nhập '" + username + "' đã được sử dụng!";
-                        } else {
+                        } else if (email != null && email.equalsIgnoreCase(foundE)) {
                             return "Địa chỉ Email '" + email + "' đã được đăng ký tài khoản!";
+                        } else {
+                            return "Số điện thoại '" + phone + "' đã được đăng ký cho tài khoản khác!";
                         }
                     }
+                }
+            } catch (SQLException ex) {
+                // Fallback nếu trường phone chưa tồn tại
+                if (hasPhone) {
+                    String fallbackSql = "SELECT id, username, email FROM users WHERE username = ? OR email = ? LIMIT 1";
+                    try (PreparedStatement psFb = conn.prepareStatement(fallbackSql)) {
+                        psFb.setString(1, username);
+                        psFb.setString(2, email);
+                        try (ResultSet rsFb = psFb.executeQuery()) {
+                            if (rsFb.next()) {
+                                String foundU = rsFb.getString("username");
+                                if (username.equalsIgnoreCase(foundU)) {
+                                    return "Tên đăng nhập '" + username + "' đã được sử dụng!";
+                                } else {
+                                    return "Địa chỉ Email '" + email + "' đã được đăng ký tài khoản!";
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    throw ex;
                 }
             }
         }
@@ -72,19 +121,48 @@ public class UserDao {
     }
 
     public static int register(String username, String password, String email) throws SQLException {
-        String insertSql = "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)";
+        return register(username, password, email, null);
+    }
+
+    public static int register(String username, String password, String email, String phone) throws SQLException {
         try (Connection conn = DBConnection.getConnection()) {
             if (conn == null) throw new SQLException("Không thể kết nối đến MySQL!");
+            ensurePhoneColumn(conn);
+
+            boolean hasPhone = (phone != null && !phone.trim().isEmpty());
+            String insertSql = hasPhone
+                    ? "INSERT INTO users (username, password_hash, email, phone) VALUES (?, ?, ?, ?)"
+                    : "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)";
+
             try (PreparedStatement ps = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, username);
                 ps.setString(2, md5(password));
                 ps.setString(3, email);
+                if (hasPhone) {
+                    ps.setString(4, phone.trim());
+                }
                 int affected = ps.executeUpdate();
                 if (affected > 0) {
                     try (ResultSet rs = ps.getGeneratedKeys()) {
                         return rs.next() ? rs.getInt(1) : 0;
                     }
                 }
+            } catch (SQLException ex) {
+                if (hasPhone) {
+                    String fallbackSql = "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)";
+                    try (PreparedStatement psFb = conn.prepareStatement(fallbackSql, Statement.RETURN_GENERATED_KEYS)) {
+                        psFb.setString(1, username);
+                        psFb.setString(2, md5(password));
+                        psFb.setString(3, email);
+                        int affected = psFb.executeUpdate();
+                        if (affected > 0) {
+                            try (ResultSet rs = psFb.getGeneratedKeys()) {
+                                return rs.next() ? rs.getInt(1) : 0;
+                            }
+                        }
+                    }
+                }
+                throw ex;
             }
         }
         return 0;

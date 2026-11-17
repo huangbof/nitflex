@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="22dp"
+    android:background="@drawable/bg_dialog_rounded">
+
+    <!-- Header Icon & Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔐"
+            android:textSize="26sp"
+            android:layout_marginEnd="10dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xác Thực Số Điện Thoại"
+                android:textColor="@color/text_white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bảo mật tài khoản thành viên NIT FLEX"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#2E2E2E"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Thông báo số điện thoại -->
+    <TextView
+        android:id="@+id/tvOtpPhoneNotice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mã OTP 6 chữ số đã được gửi tới số điện thoại:\n0987.xxx.xxx\nVui lòng kiểm tra tin nhắn SMS hoặc thanh thông báo để nhập mã:"
+        android:textColor="@color/text_white"
+        android:textSize="13sp"
+        android:lineSpacingExtra="3dp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Ô nhập mã OTP 6 chữ số -->
+    <EditText
+        android:id="@+id/etOtpCode"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/bg_genre_chip"
+        android:hint="• • • • • •"
+        android:textColorHint="@color/text_gray_dark"
+        android:textColor="@color/text_white"
+        android:inputType="number"
+        android:maxLength="6"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.3"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Bộ đếm ngược thời gian -->
+    <TextView
+        android:id="@+id/tvOtpTimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mã có hiệu lực trong: 60s"
+        android:textColor="@color/gold"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:layout_marginBottom="14dp" />
+
+    <!-- Nút Điền nhanh mã OTP (Demo / Giáo viên chấm bài) -->
+    <Button
+        android:id="@+id/btnOtpAutoFill"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="⚡ Tự động điền mã OTP (Học tập / Demo)"
+        android:textSize="12sp"
+        android:backgroundTint="#2A2A2A"
+        android:textColor="@color/gold"
+        android:layout_marginBottom="14dp" />
+
+    <!-- Nút Xác nhận OTP -->
+    <Button
+        android:id="@+id/btnOtpVerify"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="XÁC NHẬN &amp; HOÀN TẤT ĐĂNG KÝ"
+        android:backgroundTint="@color/primary_red"
+        android:textColor="@color/text_white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Nút Gửi lại mã -->
+    <Button
+        android:id="@+id/btnOtpResend"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:text="Gửi lại mã OTP"
+        android:backgroundTint="@android:color/transparent"
+        android:textColor="@color/text_gray"
+        android:textSize="13sp"
+        android:enabled="false"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Nút Hủy bỏ -->
+    <TextView
+        android:id="@+id/tvOtpCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hủy bỏ"
+        android:textColor="@color/text_gray"
+        android:textSize="13sp"
+        android:layout_gravity="center"
+        android:padding="8dp" />
+
+</LinearLayout>
