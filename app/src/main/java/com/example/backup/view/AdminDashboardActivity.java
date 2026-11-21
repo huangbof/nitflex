@@ -43,7 +43,6 @@ import com.example.backup.model.DashboardStats;
 import com.example.backup.model.Movie;
 import com.example.backup.model.User;
 import com.example.backup.model.VipPackage;
-import com.example.backup.util.AdminDialogHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -647,26 +646,154 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void showMovieDialog(Movie existingMovie) {
-        AdminDialogHelper.showMovieDialog(
-                this,
-                existingMovie,
-                progressBar,
-                (etPoster, imgPreview) -> {
-                    currentPosterInputTarget = etPoster;
-                    currentPosterPreviewTarget = imgPreview;
-                    if (pickPosterLauncher != null) {
-                        pickPosterLauncher.launch("image/*");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_admin_add_movie, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        TextView tvTitle = dialogView.findViewById(R.id.tvAdminDialogMovieTitle);
+        EditText etTitle = dialogView.findViewById(R.id.etAdminMovieTitle);
+        EditText etOrig = dialogView.findViewById(R.id.etAdminMovieOriginalTitle);
+        EditText etRating = dialogView.findViewById(R.id.etAdminMovieRating);
+        EditText etDate = dialogView.findViewById(R.id.etAdminMovieReleaseDate);
+        EditText etPoster = dialogView.findViewById(R.id.etAdminMoviePoster);
+        ImageView imgPosterPreview = dialogView.findViewById(R.id.imgAdminPosterPreview);
+        TextView btnPickPoster = dialogView.findViewById(R.id.btnPickPosterFromDevice);
+        EditText etVideo = dialogView.findViewById(R.id.etAdminMovieVideoUrl);
+        TextView tvVideoStatus = dialogView.findViewById(R.id.tvAdminVideoStatus);
+        EditText etOverview = dialogView.findViewById(R.id.etAdminMovieOverview);
+        TextView btnQuickRawSample = dialogView.findViewById(R.id.btnQuickRawSample);
+        TextView btnQuickRawEndgame = dialogView.findViewById(R.id.btnQuickRawEndgame);
+        TextView btnPickDevice = dialogView.findViewById(R.id.btnPickVideoFromDevice);
+        Button btnCancel = dialogView.findViewById(R.id.btnAdminMovieCancel);
+        Button btnSave = dialogView.findViewById(R.id.btnAdminMovieSave);
+
+        if (btnPickPoster != null) {
+            btnPickPoster.setOnClickListener(v -> {
+                currentPosterInputTarget = etPoster;
+                currentPosterPreviewTarget = imgPosterPreview;
+                if (pickPosterLauncher != null) {
+                    pickPosterLauncher.launch("image/*");
+                }
+            });
+        }
+
+        if (btnQuickRawSample != null) {
+            btnQuickRawSample.setOnClickListener(v -> {
+                etVideo.setText("raw/sample_movie.mp4");
+                if (tvVideoStatus != null) {
+                    tvVideoStatus.setVisibility(View.VISIBLE);
+                    tvVideoStatus.setText("Đã chọn file MP4: res/raw/sample_movie.mp4");
+                }
+            });
+        }
+        if (btnQuickRawEndgame != null) {
+            btnQuickRawEndgame.setOnClickListener(v -> {
+                etVideo.setText("raw/endgame.mp4");
+                if (tvVideoStatus != null) {
+                    tvVideoStatus.setVisibility(View.VISIBLE);
+                    tvVideoStatus.setText("Đã chọn file MP4: res/raw/endgame.mp4");
+                }
+            });
+        }
+        if (btnPickDevice != null) {
+            btnPickDevice.setOnClickListener(v -> {
+                currentVideoInputTarget = etVideo;
+                currentVideoStatusTarget = tvVideoStatus;
+                if (pickVideoLauncher != null) {
+                    pickVideoLauncher.launch("video/*");
+                }
+            });
+        }
+
+        if (existingMovie != null) {
+            tvTitle.setText("✏️ Chỉnh Sửa Phim");
+            etTitle.setText(existingMovie.getTitle());
+            etOrig.setText(existingMovie.getOriginalTitle());
+            etRating.setText(String.valueOf(existingMovie.getVoteAverage()));
+            etDate.setText(existingMovie.getReleaseDate());
+            etPoster.setText(existingMovie.getPosterPath());
+            if (existingMovie.getPosterPath() != null && !existingMovie.getPosterPath().isEmpty() && imgPosterPreview != null) {
+                imgPosterPreview.setVisibility(View.VISIBLE);
+                Glide.with(AdminDashboardActivity.this)
+                        .load(existingMovie.getPosterPath())
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .error(R.drawable.ic_launcher_background)
+                        .into(imgPosterPreview);
+            }
+            etVideo.setText(existingMovie.getVideoUrl());
+            if (existingMovie.getVideoUrl() != null && !existingMovie.getVideoUrl().isEmpty() && tvVideoStatus != null) {
+                tvVideoStatus.setVisibility(View.VISIBLE);
+                tvVideoStatus.setText("Nguồn hiện tại: " + existingMovie.getVideoUrl());
+            }
+            etOverview.setText(existingMovie.getOverview());
+            btnSave.setText("Cập Nhật");
+        } else {
+
+            etVideo.setText("raw/sample_movie.mp4");
+        }
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnSave.setOnClickListener(v -> {
+            String title = etTitle.getText().toString().trim();
+            if (title.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tên phim!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            double rating = 8.0;
+            try {
+                rating = Double.parseDouble(etRating.getText().toString().trim());
+            } catch (Exception ignored) {}
+
+            Movie m = existingMovie != null ? existingMovie : new Movie();
+            m.setTitle(title);
+            m.setOriginalTitle(etOrig.getText().toString().trim());
+            m.setVoteAverage(rating);
+            m.setReleaseDate(etDate.getText().toString().trim());
+            m.setPosterPath(etPoster.getText().toString().trim());
+            m.setVideoUrl(etVideo.getText().toString().trim());
+            m.setOverview(etOverview.getText().toString().trim());
+            if (m.getGenreId() <= 0) {
+                m.setGenreId(28);
+            }
+
+            dialog.dismiss();
+            progressBar.setVisibility(View.VISIBLE);
+
+            if (existingMovie != null) {
+                AdminController.updateMovie(m, new AdminController.AdminCallback() {
+                    @Override
+                    public void onSuccess(String message) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                        loadMovies();
                     }
-                },
-                (etVideo, tvStatus) -> {
-                    currentVideoInputTarget = etVideo;
-                    currentVideoStatusTarget = tvStatus;
-                    if (pickVideoLauncher != null) {
-                        pickVideoLauncher.launch("video/*");
+
+                    @Override
+                    public void onError(String error) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
                     }
-                },
-                this::loadMovies
-        );
+                });
+            } else {
+                AdminController.addMovie(m, new AdminController.AdminCallback() {
+                    @Override
+                    public void onSuccess(String message) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                        loadMovies();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 
     private void loadUsers() {
@@ -697,7 +824,24 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void showResetPasswordDialog(User user) {
-        AdminDialogHelper.showResetPasswordDialog(this, user, null);
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("🔑 Đặt lại mật khẩu cho " + user.getUsername());
+        b.setMessage("Mật khẩu mới sẽ được cập nhật thành: 123456");
+        b.setPositiveButton("Xác nhận", (dialog, which) -> {
+            AdminController.resetUserPassword(user.getId(), "123456", new AdminController.AdminCallback() {
+                @Override
+                public void onSuccess(String message) {
+                    Toast.makeText(AdminDashboardActivity.this, "Đã đặt lại mật khẩu của " + user.getUsername() + " thành: 123456", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        b.setNegativeButton("Hủy", null);
+        b.show();
     }
 
     private void loadCastsTab() {
@@ -768,7 +912,49 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void showAddCastDialog(int movieId) {
-        AdminDialogHelper.showAddCastDialog(this, movieId, progressBar, () -> loadCastsForMovie(movieId));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_admin_add_cast, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        EditText etActor = dialogView.findViewById(R.id.etAdminCastActor);
+        EditText etCharacter = dialogView.findViewById(R.id.etAdminCastCharacter);
+        EditText etProfile = dialogView.findViewById(R.id.etAdminCastProfile);
+        Button btnCancel = dialogView.findViewById(R.id.btnAdminCastCancel);
+        Button btnSave = dialogView.findViewById(R.id.btnAdminCastSave);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnSave.setOnClickListener(v -> {
+            String actor = etActor.getText().toString().trim();
+            if (actor.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tên diễn viên!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Cast c = new Cast();
+            c.setMovieId(movieId);
+            c.setActorName(actor);
+            c.setCharacterName(etCharacter.getText().toString().trim());
+            c.setProfilePath(etProfile.getText().toString().trim());
+
+            dialog.dismiss();
+            progressBar.setVisibility(View.VISIBLE);
+            AdminController.addCast(c, new AdminController.AdminCallback() {
+                @Override
+                public void onSuccess(String message) {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                    loadCastsForMovie(movieId);
+                }
+
+                @Override
+                public void onError(String error) {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        dialog.show();
     }
 
     private void loadVipPackages() {
@@ -792,11 +978,101 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void showVipPackageDialog(VipPackage existingPkg) {
-        AdminDialogHelper.showVipPackageDialog(this, existingPkg, progressBar, this::loadVipPackages);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_admin_vip_package, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        TextView tvTitle = dialogView.findViewById(R.id.tvAdminDialogVipTitle);
+        EditText etName = dialogView.findViewById(R.id.etAdminPkgName);
+        EditText etCode = dialogView.findViewById(R.id.etAdminPkgCode);
+        EditText etPrice = dialogView.findViewById(R.id.etAdminPkgPrice);
+        EditText etDuration = dialogView.findViewById(R.id.etAdminPkgDuration);
+        EditText etDesc = dialogView.findViewById(R.id.etAdminPkgDesc);
+        Button btnCancel = dialogView.findViewById(R.id.btnAdminPkgCancel);
+        Button btnSave = dialogView.findViewById(R.id.btnAdminPkgSave);
+
+        if (existingPkg != null) {
+            tvTitle.setText("👑 Chỉnh Sửa Gói VIP");
+            etName.setText(existingPkg.getName());
+            etCode.setText(existingPkg.getCode());
+            etCode.setEnabled(false);
+            etPrice.setText(String.format(Locale.US, "%.0f", existingPkg.getPrice()));
+            etDuration.setText(String.valueOf(existingPkg.getDurationDays()));
+            etDesc.setText(existingPkg.getDescription());
+            btnSave.setText("Cập Nhật");
+        }
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnSave.setOnClickListener(v -> {
+            String name = etName.getText().toString().trim();
+            String code = etCode.getText().toString().trim();
+            if (name.isEmpty() || code.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ tên và mã gói!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            double price = 0;
+            int days = 30;
+            try {
+                price = Double.parseDouble(etPrice.getText().toString().trim());
+                days = Integer.parseInt(etDuration.getText().toString().trim());
+            } catch (Exception ignored) {}
+
+            VipPackage p = existingPkg != null ? existingPkg : new VipPackage();
+            p.setName(name);
+            p.setCode(code);
+            p.setPrice(price);
+            p.setDurationDays(days);
+            p.setDescription(etDesc.getText().toString().trim());
+
+            dialog.dismiss();
+            progressBar.setVisibility(View.VISIBLE);
+
+            if (existingPkg != null) {
+                AdminController.updateVipPackage(p, new AdminController.AdminCallback() {
+                    @Override
+                    public void onSuccess(String message) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                        loadVipPackages();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                AdminController.addVipPackage(p, new AdminController.AdminCallback() {
+                    @Override
+                    public void onSuccess(String message) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, message, Toast.LENGTH_SHORT).show();
+                        loadVipPackages();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(AdminDashboardActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 
     private void showDeleteConfirmDialog(String title, String message, Runnable onConfirm) {
-        AdminDialogHelper.showDeleteConfirmDialog(this, title, message, onConfirm);
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    if (onConfirm != null) onConfirm.run();
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
     private void loadComments() {

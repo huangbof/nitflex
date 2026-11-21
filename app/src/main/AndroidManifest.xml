@@ -20,7 +20,7 @@
 
         <!-- Entry point / Splash -->
         <activity
-            android:name=".view.SplashActivity"
+            android:name="com.example.backup.view.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,21 +28,21 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" android:exported="false" />
-        <activity android:name=".view.LoginActivity" android:exported="false" />
-        <activity android:name=".view.RegisterActivity" android:exported="false" />
-        <activity android:name=".view.HomeActivity" android:exported="false" />
-        <activity android:name=".view.MovieDetailActivity" android:exported="false" />
+        <activity android:name="com.example.backup.MainActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.LoginActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.RegisterActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.HomeActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.MovieDetailActivity" android:exported="false" />
         <activity
-            android:name=".view.PlayerActivity"
+            android:name="com.example.backup.view.PlayerActivity"
             android:exported="false"
             android:hardwareAccelerated="true"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden" />
-        <activity android:name=".view.SearchActivity" android:exported="false" />
-        <activity android:name=".view.FavoritesActivity" android:exported="false" />
-        <activity android:name=".view.ProfileActivity" android:exported="false" />
-        <activity android:name=".view.AdminDashboardActivity" android:exported="false" />
-        <activity android:name=".view.ChatAiActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.example.backup.view.SearchActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.FavoritesActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.ProfileActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.AdminDashboardActivity" android:exported="false" />
+        <activity android:name="com.example.backup.view.ChatAiActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
 
     </application>
 
